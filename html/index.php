@@ -41,7 +41,7 @@
 
 <body>
 	<div class="wrap">
-		<h1>Test Example</h1>
+		<h1>My PHP Pages</h1>
 		<hr>
 		<div id="div_board">
 			<h3>Board</h3>
