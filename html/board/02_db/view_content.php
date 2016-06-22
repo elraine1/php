@@ -49,7 +49,7 @@
 				$request_num = $_GET['bno'];
 			}	
 			
-			$conn = get_mysql_conn();
+			$conn = get_sqlserver_conn();
 			update_hits($conn, $request_num);
 			
 			$select_query = "SELECT * FROM board WHERE bno='".$request_num."';";

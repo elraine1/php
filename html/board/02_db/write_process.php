@@ -14,7 +14,7 @@
 		die('not enough data.');
 	}
 	
-	$conn = get_mysql_conn();
+	$conn = get_sqlserver_conn();
 	$insert_query = "INSERT INTO board(writer, title, content) values('" . $board['writer'] . "','" . $board['title'] . "','" . $board['content'] . "') ";		
 	if (mysqli_query($conn, $insert_query) === false) {
 		die(mysqli_error($conn));
@@ -22,4 +22,7 @@
 	echo "성공적으로 작성되었습니다. <br>";
 	echo "<br><a href='./board_write.php'><button>글쓰기</button></a>";
 	echo "<a href='./index.php'><button>글목록</button></a> <br>";
+	
+	mysqli_free_result($result);
+	mysqli_close($conn);
 ?>

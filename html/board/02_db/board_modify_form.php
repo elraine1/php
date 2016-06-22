@@ -38,7 +38,7 @@
 			if($_SERVER['REQUEST_METHOD'] == 'GET'){
 				$request_num = $_GET['bno'];
 			}	
-			$conn = get_mysql_conn();
+			$conn = get_sqlserver_conn();
 			
 			$select_query = sprintf("SELECT * FROM board WHERE bno='%d'", $request_num);
 			$result = mysqli_query($conn, $select_query);// result_set

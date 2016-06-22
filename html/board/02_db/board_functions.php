@@ -1,15 +1,17 @@
 <?php 
 
-	function get_mysql_conn(){
-		$hostname='localhost';
-		$username='root';
-		$password='oracle';
-		$dbname='seokmin';
+	function get_sqlserver_conn(){
+		$hostname='kocia.cytzyor3ndjk.ap-northeast-2.rds.amazonaws.com';
+		$username='SeokMin';
+		$password='password';
+		$dbname='SeokMin';
 		
-		$conn=0;
-		if (!($conn=mysqli_connect($hostname, $username, $password, $dbname))) {
+		$conn=mysqli_connect($hostname, $username, $password, $dbname);
+		mysqli_query($conn, "SET NAMES 'utf8'");
+		if (!($conn)) {
 			die('Mysql connection failed: '.mysqli_connect_error());
 		} 
+		
 		return $conn;
 	}
 

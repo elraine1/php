@@ -36,7 +36,7 @@
 		<?php	
 			require_once('board_functions.php');
 			
-			$conn = get_mysql_conn();
+			$conn = get_sqlserver_conn();
 			$select_query = "SELECT * FROM board ORDER BY bno DESC";
 			// select 쿼리는 mysqli_query 함수의 반환값으로 결과를 받는다.
 			
