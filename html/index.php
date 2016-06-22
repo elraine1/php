@@ -53,7 +53,6 @@
 			<h3>Dictionary</h3>
 			<a href="/dictionary/01_file/dictionary.php">Dictionary</a> <br>
 			<a href="/dictionary/02_db/lecture_4_01.php">DB 입력</a> <br>
-			
 		</div>
 		<hr>
 		<div id="div_board">
