@@ -23,6 +23,5 @@
 	echo "<br><a href='./board_write.php'><button>글쓰기</button></a>";
 	echo "<a href='./index.php'><button>글목록</button></a> <br>";
 	
-	mysqli_free_result($result);
 	mysqli_close($conn);
 ?>
