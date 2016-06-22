@@ -46,11 +46,11 @@
 				<tr>
 					<td colspan="2">
 						<input type="submit" value="제출">
-						<a href="./index.php"><button>전체글 보기</button></a>
 					</td>
 				</tr>
 			</table>
 		</form>
+		<a href="./index.php"><button>전체글 보기</button></a> <br>
 		<hr>
 	</div>
 
