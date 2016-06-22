@@ -100,7 +100,7 @@
 			<br>
 		</div>
 		<hr>
-		
+		<a href="/index.php"><button>처음으로</button></a> <br>
 	</div>	
 
 </body>
