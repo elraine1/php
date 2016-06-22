@@ -67,14 +67,13 @@
 			mysqli_close($conn);
 			
 		?>
-		
-		<br><a href="./board_write.php"><button>글쓰기</button></a><br>
+		<br>
+		<a href="./board_write.php"><button>글작성</button></a>
+		<a href="./index.php"><button>글목록</button></a> <br>
 		</div>
 		<hr>
 		
 	</div>	
-		
-	<?php link_goto_main(); ?>
 
 </body>
 </html>s
