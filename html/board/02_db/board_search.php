@@ -45,23 +45,23 @@
 				$search_word = $_GET['search_word'];
 				
 				if($search_word != null){
-					$select_query = "SELECT * FROM board WHERE " . $search_type . " LIKE '%" . $search_word . "%' ORDER BY bno DESC";
+					$select_query = sprintf("SELECT * FROM board WHERE %s LIKE '\%%s\%' ORDER BY bno DESC", $search_type, $search_word );
 				}
 			}
 			
 			$result = mysqli_query($conn, $select_query);
-			echo "<table>";
-			echo "<tr> <th width='40'>BNO</th> <th width='40'>Writer</th> <th width='200'>Title</th> <th width='40'>Hits</th> <th width='80'>Date</th></tr>";
+			printf("<table>");
+			printf("<tr> <th width='40'>BNO</th> <th width='40'>Writer</th> <th width='200'>Title</th> <th width='40'>Hits</th> <th width='80'>Date</th></tr>");
 			while($board = mysqli_fetch_assoc($result)) {
-				echo "<tr>";
-				echo "<td id='td_num' align='center'><a href='./view_content.php?boardnum=" . $board['bno'] . "'> " . $board['bno'] . "</a></td>";
-				echo "<td align='center'> " . $board['writer'] . " </td>";
-				echo "<td align='left'><a href='./view_content.php?boardnum=" . $board['bno'] . "'> " . $board['title'] . "</a></td>";
-				echo "<td align='center'> " . $board['hits'] . " </td>";
-				echo "<td align='center'> " . $board['written_date'] . " </td>";
-				echo "</tr>";	
+				printf("<tr>");
+				printf("<td id='td_num' align='center'><a href='./view_content.php?boardnum='%d'> %d </a></td>", $board['bno'], $board['bno']);
+				printf("<td align='center'> %s </td>", $board['writer']);
+				printf("<td align='left'><a href='./view_content.php?bno='%d'> %d </a></td>", $board['bno'], $board['bno']);
+				printf("<td align='center'> %d </td>", $board['hits']);
+				printf("<td align='center'> %s </td>", $board['written_date']);
+				printf("</tr>");	
 			}
-			echo "</table>";
+			printf("</table>");
 		
 			mysqli_free_result($result);
 			mysqli_close($conn);

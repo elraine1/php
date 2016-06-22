@@ -40,7 +40,7 @@
 			}	
 			$conn = get_mysql_conn();
 			
-			$select_query = "SELECT * FROM board WHERE bno='".$request_num."';";
+			$select_query = sprintf("SELECT * FROM board WHERE bno='%d'", $request_num);
 			$result = mysqli_query($conn, $select_query);// result_set
 			if (($board = mysqli_query($conn, $select_query)) === false) {
 				echo mysqli_error($conn);
@@ -48,22 +48,21 @@
 			
 			$board = mysqli_fetch_assoc($result);
 			
-		?>
-			<form action="modify_process.php" method="post">
-				<input type="hidden" name="bno" value="<?php echo $board['bno'] ?>" >
-				<table>
-					<tr><th>BNO</th> <td><?php echo $board['bno']?></td></tr>
-					<tr><th>Writer</th> <td><input type="text" name="board_writer" value="<?php echo $board['writer']?>"></td></tr>
-					<tr><th>Hits</th> <td><?php echo $board['hits']?></td></tr>
-					<tr><th>Date</th> <td><?php echo $board['last_update']?></td></tr>
-					<tr><th>Title</th> <td><input type="text" name="board_title" value="<?php echo $board['title'] ?>"></td></tr>
-					<tr><td height="10" colspan="2"></td></tr>
-					<tr><th colspan="2" align="center">Content</th></tr>
-					<tr><td id="td_content" colspan="2" align="center"><textarea name="board_content" rows="12" cols="135"><?php echo $board['content']?></textarea>
-					<br><input type="submit"value="확인"></td></tr>
-				</table>
-			</form>
-		<?php
+			printf("<form action='modify_process.php' method='post'>");
+			printf("<input type='hidden' name='bno' value='%d'>", $board['bno']);
+			printf("<table>");
+			printf("<tr><th>BNO</th> <td>%d</td></tr>", $board['bno']);
+			printf("<tr><th>Writer</th> <td><input type='text' name='board_writer' value='%s'></td></tr>", $board['writer']);
+			printf("<tr><th>Hits</th> <td>%d</td></tr>", $board['hits']);
+			printf("<tr><th>Date</th> <td>%s</td></tr>", $board['last_update']);
+			printf("<tr><th>Title</th> <td><input type='text' name='board_title' value='%s'></td></tr>",  $board['title'] );
+			printf("<tr><td height='10' colspan='2'></td></tr>");
+			printf("<tr><th colspan='2' align='center'>Content</th></tr>");
+			printf("<tr><td id='td_content' colspan='2' align='center'><textarea name='board_content' rows='12' cols='135'>%s</textarea>", $board['content']);
+			printf("<br><input type='submit' value='확인'></td></tr>");
+			printf("</table>");
+			printf("</form>");
+
 			mysqli_free_result($result);
 			mysqli_close($conn);
 		?>	
