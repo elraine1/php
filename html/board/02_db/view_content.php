@@ -78,7 +78,7 @@
 		<br>
 		<a href="./board_write.php"><button>글작성</button></a>
 		<a href="./board_modify_form.php?bno=<?php echo $board['bno']?>"><button>글수정</button></a>
-		<a href="./board_delete.php?bno=<?php echo $board['bno']?>"><button>글삭제</button></a><br>
+		<a href="./delete_process.php?bno=<?php echo $board['bno']?>"><button>글삭제</button></a><br>
 		<a href="./index.php"><button>글목록</button></a><br>
 	</div>
 	<hr>

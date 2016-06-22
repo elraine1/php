@@ -50,6 +50,7 @@
 			
 		?>
 			<form action="modify_process.php" method="post">
+				<input type="hidden" name="bno" value="<?php echo $board['bno'] ?>" >
 				<table>
 					<tr><th>BNO</th> <td><?php echo $board['bno']?></td></tr>
 					<tr><th>Writer</th> <td><input type="text" name="board_writer" value="<?php echo $board['writer']?>"></td></tr>
