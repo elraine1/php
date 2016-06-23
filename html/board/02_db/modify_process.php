@@ -2,7 +2,7 @@
 	require_once('board_functions.php');
 		
 	if($_SERVER['REQUEST_METHOD'] == 'POST'){
-		$board['bno'] = $_POST['bno'];
+		$board['post_id'] = $_POST['post_id'];
 		$board['writer'] = $_POST['board_writer'];		// board_writer	
 		$board['title'] = $_POST['board_title'];		// board_title
 		$board['content'] = $_POST['board_content'];	// board_content

@@ -29,56 +29,39 @@
 </head>
 <body>
 
-	<h1>나의 게시판</h1>
+	<h1>POST</h1>
 	<hr>
 	<div class="content">	
 		<?php
 		
-			function update_hits($conn, $bno){
-				//$update_query = "UPDATE board SET hits=hits+1 WHERE bno='".$bno."';";	
-				$update_query = sprintf("UPDATE board SET hits=hits+1 WHERE bno='%d'", $bno);
-				if(!(mysqli_query($conn, $update_query))){
-					echo "Error updating record: " . mysqli_error($conn);
-				}
-				//echo "Hits updated successfully!";
-			}
-			
 			require_once('board_functions.php');
 		
 			if($_SERVER['REQUEST_METHOD'] == 'GET'){
-				$request_num = $_GET['bno'];
+				$post_id = $_GET['post_id'];
+				$board_id = $_GET['board_id'];
 			}	
 			
-			$conn = get_sqlserver_conn();
-			update_hits($conn, $request_num);
+			$board_info = get_all_board_info();
+			$post = get_post($post_id);
+			update_hits($post_id);
+		
+			printf("<table>");
+			printf("<tr><th colspan='2'>%s 게시판</th></tr>", $board_info[$board_id]);
+			printf("<tr><th>BNO</th><td>%d</td></tr>", $post['post_id']);
+			printf("<tr><th>Writer</th><td>%s</td></tr>", $post['writer']);
+			printf("<tr><th>Hits</th><td>%d</td></tr>",$post['hits']);
+			printf("<tr><th>Date</th><td>%s</td></tr>",$post['last_update']);
+			printf("<tr><th>Title</th><td>%s</td></tr>", $post['title']);
+			printf("<tr><td height='10' colspan='2'></td></tr>");
+			printf("<tr><th colspan='2' align='center'>Content</th></tr>");
+			printf("<tr><td id='td_content' colspan='2'><textarea disabled rows='12' cols='135'>%s</textarea></td></tr>", $post['content']);
+			printf("</table>");
 			
-			$select_query = "SELECT * FROM board WHERE bno='".$request_num."';";
-			$result = mysqli_query($conn, $select_query);// result_set
-			if (($board = mysqli_query($conn, $select_query)) === false) {
-				echo mysqli_error($conn);
-			}
-				
-			$board = mysqli_fetch_assoc($result);
-			
-			echo "<table>";
-			echo "<tr><th>BNO</th><td>" . $board['bno'] . "</td></tr>";
-			echo "<tr><th>Writer</th><td>" . $board['writer'] . "</td></tr>";
-			echo "<tr><th>Hits</th><td>" . $board['hits'] . "</td></tr>";
-			echo "<tr><th>Date</th><td>" . $board['last_update'] . "</td></tr>";
-			echo "<tr><th>Title</th><td>" . $board['title'] . "</td></tr>";
-			echo "<tr><td height='10' colspan='2'></td></tr>";
-			echo "<tr><th colspan='2' align='center'>Content</th></tr>";
-			echo "<tr><td id='td_content' colspan='2'><textarea disabled rows='12' cols='135'>" . $board['content'] . "</textarea></td></tr>";
-			echo "</table>";
-			
-					
-			mysqli_free_result($result);
-			mysqli_close($conn);
 		?>	
 		<br>
 		<a href="./board_write.php"><button>글작성</button></a>
-		<a href="./board_modify_form.php?bno=<?php echo $board['bno']?>"><button>글수정</button></a>
-		<a href="./delete_process.php?bno=<?php echo $board['bno']?>"><button>글삭제</button></a><br>
+		<a href="./board_modify_form.php?bno=<?php echo $post['bno']?>"><button>글수정</button></a>
+		<a href="./delete_process.php?bno=<?php echo $post['bno']?>"><button>글삭제</button></a><br>
 		<a href="./index.php"><button>글목록</button></a><br>
 	</div>
 	<hr>
