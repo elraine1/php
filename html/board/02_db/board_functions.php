@@ -55,6 +55,26 @@
 		
 		return $post;
 	}
+	
+	// 게시물 작성해주는 함수.
+	function post_upload($board){
+		// 작성자, 제목, 컨텐츠 중 내용이 하나라도 빠지면 die.
+		echo "<br>";
+		if($board['writer'] == '' || $board['title'] == '' || $board['content'] == '' ){
+			echo "<br><a href='./board_write.php'><button>글쓰기</button></a>";
+			echo "<a href='./index.php'><button>글목록</button></a> <br>";
+			die('not enough data.');
+		}
+				
+		$conn = get_sqlserver_conn();
+		$insert_query = sprintf("INSERT INTO post(writer, title, content, board_id) values('%s', '%s', '%s', '%d')", $board['writer'], $board['title'], $board['content'], $board['board_id']);		
+		if (mysqli_query($conn, $insert_query) === false) {
+			die(mysqli_error($conn));
+		}
+	
+		echo "성공적으로 작성되었습니다. <br>";
+	}
+	
 
 	
 	

@@ -10,9 +10,9 @@
 	if (mysqli_query($conn, $delete_query) === false) {
 		echo mysqli_error($conn);
 	}
-	echo "성공적으로 삭제되었습니다. <br>";
-	echo "<br><a href='./board_write.php'><button>글쓰기</button></a>";
-	echo "<a href='./index.php'><button>글목록</button></a> <br>";
+	printf("성공적으로 삭제되었습니다. <br>");
+	printf("<br><a href='./board_write.php'><button>글쓰기</button></a>");
+	printf("<a href='./index.php'><button>글목록</button></a> <br>");
 	
 	mysqli_close($conn);
 ?>

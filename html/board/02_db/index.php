@@ -46,7 +46,7 @@
 				require_once('board_functions.php');
 				
 				$conn = get_sqlserver_conn();
-				$board_info = get_all_board_info($conn);			
+				$board_info = get_all_board_info($conn);
 				
 				foreach($board_info as $board_id => $board_name){		// 게시판별 테이블 작성.
 					printf("<hr>");
@@ -65,7 +65,10 @@
 						printf("<td align='center'>%s</td>", $post['last_update']);
 						printf("</tr>");
 					}
-					printf("</table><br>");
+					printf("</table>");
+					
+					printf("<a href='./board_write_form.php?board_id=%d'><button>글쓰기</button></a>", $board_id);
+					printf("<br>");
 				}
 				mysqli_free_result($result);
 				mysqli_close($conn);
@@ -73,7 +76,6 @@
 			?>
 			<br>
 			<a href="./index.php"><button>전체글 보기</button></a>
-			<a href="./board_write.php"><button>글쓰기</button></a>
 			<br>
 		</div>
 		<hr>
