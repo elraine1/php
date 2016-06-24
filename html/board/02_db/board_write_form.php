@@ -28,15 +28,22 @@
 <?php
 	if($_SERVER['REQUEST_METHOD'] == 'GET'){
 		$board_id = $_GET['board_id'];
-	}	
+	}		
+	
+	$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
+	require_once($mylib_path);
+	
+	$board_info = get_all_board_info();
 ?>
 
 <body>
 	<div class="content">
-		<h1>나의 게시판</h1>
+	<?php 
+		printf("<h1>%s 게시판</h1>", $board_info[$board_id]);
+	?>
 		<hr>
 		<form action="write_process.php" method="post">
-			<?php printf("<input type='hidden' name='board_id' value='%s'>", $board_id);	?>
+			<?php printf("<input type='hidden' name='board_id' value='%s'>", $board_id); ?>
 			<table>
 				<tr>
 					<th><h5>작성자</h5></th>
