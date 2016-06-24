@@ -17,7 +17,7 @@
 			echo "</table>";
 		}
 	
-		$file_name = '../data/dictionary.txt';
+		$file_name = './dictionary.txt';
 		$word_rank = array();
 		
 		// dictionary read
@@ -36,7 +36,7 @@
 		// 키 값으로 정렬 후 저장.
 		ksort($word_rank);
 		
-		$file_name2 = '../data/result.txt';
+		$file_name2 = './result.txt';
 		if(!file_exists($file_name2)){
 			$file_handle2 = fopen($file_name2, "w+");
 			
