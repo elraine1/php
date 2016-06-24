@@ -33,7 +33,8 @@
 	<hr>
 	<div class="content">	
 		<?php
-			require_once('board_functions.php');
+			$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
+			require_once($mylib_path);
 		
 			if($_SERVER['REQUEST_METHOD'] == 'GET'){
 				$post_id = $_GET['post_id'];

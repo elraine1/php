@@ -43,19 +43,17 @@
 		<h2>게시판 연습</h2>
 		<div id="div_table">		
 			<?php	
-				require_once('board_functions.php');
+				$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
+				require_once($mylib_path);
 				
-				$conn = get_sqlserver_conn();
-				$board_info = get_all_board_info($conn);
-				
+				$board_info = get_all_board_info();				
 				foreach($board_info as $board_id => $board_name){		// 게시판별 테이블 작성.
 					printf("<hr>");
 					printf("<h3>%s 게시판</h3>", $board_name);
 					printf("<table>");
 					printf("<tr> <th width='40'>글번호</th> <th width='80'>작성자</th> <th width='200'>제목</th> <th width='40'>조회수</th> <th width='90'>작성일</th></tr>");
 					
-					$select_query = sprintf("SELECT * FROM post WHERE board_id = %s ORDER BY post_id DESC", $board_id);
-					$result = mysqli_query($conn, $select_query);
+					$result = get_board_info($board_id);
 					while($post = mysqli_fetch_assoc($result)) {
 						printf("<tr>");
 						printf("<td id='td_num' align='center'><a href='./view_content.php?board_id=%d&post_id=%d'>%d</a></td>", $board_id, $post['post_id'], $post['post_id']);
@@ -70,8 +68,6 @@
 					printf("<a href='./board_write_form.php?board_id=%d'><button>글쓰기</button></a>", $board_id);
 					printf("<br>");
 				}
-				mysqli_free_result($result);
-				mysqli_close($conn);
 				
 			?>
 			<br>
