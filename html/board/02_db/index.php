@@ -54,26 +54,25 @@
 					$posts = get_posts($board_id);
 					
 					printf("<table>");
-					printf("<tr> <th width='40'>글번호</th> <th width='80'>작성자</th> <th width='200'>제목</th> <th width='40'>조회수</th> <th width='90'>작성일</th></tr>");
+					printf("<tr> <th width='40'>글번호</th> <th width='80'>작성자</th> <th width='200'>제목</th> <th width='40'>조회수</th> <th width='90'>작성일시</th></tr>");
 					
 					for($i=0; $i < count($posts); $i++){
 						printf("<tr>");
-						printf("<td id='td_num' align='center'><a href='./view_content.php?board_id=%d&post_id=%d'>%d</a></td>", $board_id, $posts[$i]['post_id'], $posts[$i]['post_id']);
+						printf("<td id='td_num' align='center'><a href='./view_post.php?board_id=%d&post_id=%d'>%d</a></td>", $board_id, $posts[$i]['post_id'], $posts[$i]['post_id']);
 						printf("<td align='center'>%s</td>", $posts[$i]['writer']);
-						printf("<td align='left'><a href='./view_content.php?board_id=%d&post_id=%d'>%s</td>", $board_id, $posts[$i]['post_id'],$posts[$i]['title']);
+						printf("<td align='left'><a href='./view_post.php?board_id=%d&post_id=%d'>%s</td>", $board_id, $posts[$i]['post_id'],$posts[$i]['title']);
 						printf("<td align='center'>%d</td>", $posts[$i]['hits']);
 						printf("<td align='center'>%s</td>", $posts[$i]['last_update']);
 						printf("</tr>");
 					}
 
 					printf("</table>");	
-					printf("<a href='./board_write_form.php?board_id=%d'><button>글쓰기</button></a><br>", $board_id);
+					printf("<a href='./post_write_form.php?board_id=%d'><button>글쓰기</button></a><br><br>", $board_id);
 					
 
 				}
 				
 			?>
-			<br>
 			<a href="./index.php"><button>전체글 보기</button></a>
 			<br>
 		</div>

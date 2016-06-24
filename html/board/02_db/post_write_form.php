@@ -42,7 +42,7 @@
 		printf("<h1>%s 게시판</h1>", $board_info[$board_id]);
 	?>
 		<hr>
-		<form action="write_process.php" method="post">
+		<form action="post_write_process.php" method="post">
 			<?php printf("<input type='hidden' name='board_id' value='%s'>", $board_id); ?>
 			<table>
 				<tr>

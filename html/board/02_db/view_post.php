@@ -2,30 +2,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <html>
 <head>
-	<style type="text/css">
-	table{
-		width:50%;
-		align:center;
-		border: 1px solid LightSeaGreen;
-		border-collapse: collapse;
-		margin: 10px;
-	}
-	th{
-		background-color: LightSkyBlue ;
-		border: 1px solid LightSeaGreen;
-	}
-	td, tr{
-		border: 1px solid LightSeaGreen;
-		border-collapse: collapse;
-	}
-	#td_num{
-		text-align:center;
-	}
-	#td_content{
-		 height: 150px;
-	}
-	
-	</style>
+	<link rel="stylesheet" type="text/css" href="/css/style1.css">
 </head>
 <body>
 
@@ -57,14 +34,36 @@
 			printf("<tr><th colspan='2' align='center'>내 용</th></tr>");
 			printf("<tr><td id='td_content' colspan='2'><textarea disabled rows='12' cols='135'>%s</textarea></td></tr>", $post['content']);
 			printf("</table>");
-			printf("<br><a href='./board_write_form.php?board_id=%d'><button>글작성</button></a>", $board_id);
-			printf("<a href='./board_modify_form.php?board_id=%d&post_id=%d'><button>글수정</button></a>", $board_id, $post['post_id']);
-			printf("<a href='./delete_process.php?post_id=%d'><button>글삭제</button></a><br>", $post['post_id']);
+			printf("<br><a href='./post_write_form.php?board_id=%d'><button>글작성</button></a>", $board_id);
+			printf("<a href='./post_modify_form.php?board_id=%d&post_id=%d'><button>글수정</button></a>", $board_id, $post['post_id']);
+			printf("<a href='./post_delete_process.php?post_id=%d'><button>글삭제</button></a><br>", $post['post_id']);
 			
 		?>	
-
-		<a href="./index.php"><button>글목록</button></a><br>
 	</div>
+	<div class="comment_wrap">
+		<br>
+		<b>Comments(...)</b>
+		<div class="comment">
+			<table>
+				<tr>
+					<td class="user_id" height="20">123</td><td class="comment">456789</td><td class="date">000</td>
+				</tr>
+			</table>
+		</div>
+		<div class="comment_form">
+			<form action="" method="post">
+				<?php printf("<input type='hidden' value='%d'>", $post_id); ?>
+				<table width="800px">
+					<tr>
+						<td class="user_id" align="center" width="60px">WRITER:<br><input type="text" name="writer" size="14"></td>
+						<td class="comment" align="center" width="200px"><textarea name="comment" rows="4" cols="70"></textarea></td>
+						<td><input type="submit" value="확인" align="center"></td>
+					</tr>						
+				</table>
+			</form>				
+		</div>
+	</div>
+		<a href="./index.php"><button>글목록</button></a><br>
 	<hr>
 	
 </body>

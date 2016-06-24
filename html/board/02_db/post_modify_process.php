@@ -4,14 +4,14 @@
 		
 	if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		$post['post_id'] = $_POST['post_id'];
-		$post['writer'] = $_POST['writer'];		// board_writer	
+		$post['writer'] = $_POST['writer'];		// post_writer	
 		$post['title'] = $_POST['title'];		// board_title
 		$post['content'] = $_POST['content'];	// board_content
 	}
 	
 	modify_post($post);
 	
-	printf("<br><a href='./board_write.php'><button>글쓰기</button></a>");
+	printf("<a href='./post_write_form.php?board_id=%d'><button>글쓰기</button></a><br>", $board_id);
 	printf("<a href='./index.php'><button>글목록</button></a><br>");
 	
 ?>

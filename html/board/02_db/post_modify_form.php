@@ -36,7 +36,7 @@
 			printf("</table>");
 			printf("</form>");
 			
-			printf("<br><a href='./board_write.php'><button>글쓰기</button></a>");
+			printf("<br><a href='./post_write_form.php'><button>글쓰기</button></a>");
 			printf("<a href='./index.php'><button>글목록</button></a><br>");
 			
 			mysqli_free_result($result);
