@@ -47,21 +47,21 @@
 		
 			printf("<table>");
 			printf("<tr><th colspan='2'>%s 게시판</th></tr>", $board_info[$board_id]);
-			printf("<tr><th>BNO</th><td>%d</td></tr>", $post['post_id']);
-			printf("<tr><th>Writer</th><td>%s</td></tr>", $post['writer']);
-			printf("<tr><th>Hits</th><td>%d</td></tr>",$post['hits']);
-			printf("<tr><th>Date</th><td>%s</td></tr>",$post['last_update']);
-			printf("<tr><th>Title</th><td>%s</td></tr>", $post['title']);
+			printf("<tr><th>글번호</th><td>%d</td></tr>", $post['post_id']);
+			printf("<tr><th>작성자</th><td>%s</td></tr>", $post['writer']);
+			printf("<tr><th>조회수</th><td>%d</td></tr>",$post['hits']);
+			printf("<tr><th>작성일</th><td>%s</td></tr>",$post['last_update']);
+			printf("<tr><th>제목</th><td>%s</td></tr>", $post['title']);
 			printf("<tr><td height='10' colspan='2'></td></tr>");
-			printf("<tr><th colspan='2' align='center'>Content</th></tr>");
+			printf("<tr><th colspan='2' align='center'>내 용</th></tr>");
 			printf("<tr><td id='td_content' colspan='2'><textarea disabled rows='12' cols='135'>%s</textarea></td></tr>", $post['content']);
 			printf("</table>");
 			
 		?>	
 		<br>
 		<a href="./board_write_form.php"><button>글작성</button></a>
-		<a href="./board_modify_form.php?bno=<?php echo $post['bno']?>"><button>글수정</button></a>
-		<a href="./delete_process.php?bno=<?php echo $post['bno']?>"><button>글삭제</button></a><br>
+		<a href="./board_modify_form.php?post_id=<?php echo $post['post_id']?>"><button>글수정</button></a>
+		<a href="./delete_process.php?post_id=<?php echo $post['post_id']?>"><button>글삭제</button></a><br>
 		<a href="./index.php"><button>글목록</button></a><br>
 	</div>
 	<hr>

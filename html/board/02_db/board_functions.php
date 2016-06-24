@@ -42,7 +42,7 @@
 		mysqli_close($conn);
 	}
 	
-	// post 정보를 리턴해주는 함수.
+	// 게시물(post) 정보를 리턴해주는 함수.
 	function get_post($post_id){
 		
 		$conn = get_sqlserver_conn();

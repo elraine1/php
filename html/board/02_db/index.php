@@ -52,7 +52,7 @@
 					printf("<hr>");
 					printf("<h3>%s 게시판</h3>", $board_name);
 					printf("<table>");
-					printf("<tr> <th width='40'>POST_ID</th> <th width='80'>WRITER</th> <th width='200'>TITLE</th> <th width='40'>HITS</th> <th width='90'>DATE</th></tr>");
+					printf("<tr> <th width='40'>글번호</th> <th width='80'>작성자</th> <th width='200'>제목</th> <th width='40'>조회수</th> <th width='90'>작성일</th></tr>");
 					
 					$select_query = sprintf("SELECT * FROM post WHERE board_id = %s ORDER BY post_id DESC", $board_id);
 					$result = mysqli_query($conn, $select_query);

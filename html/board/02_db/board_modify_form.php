@@ -36,29 +36,29 @@
 			require_once('board_functions.php');
 		
 			if($_SERVER['REQUEST_METHOD'] == 'GET'){
-				$request_num = $_GET['bno'];
+				$post_id = $_GET['post_id'];
 			}	
 			$conn = get_sqlserver_conn();
 			
-			$select_query = sprintf("SELECT * FROM board WHERE bno='%d'", $request_num);
+			$select_query = sprintf("SELECT * FROM post WHERE post_id='%d'", $post_id);
 			$result = mysqli_query($conn, $select_query);// result_set
-			if (($board = mysqli_query($conn, $select_query)) === false) {
+			if (($post = mysqli_query($conn, $select_query)) === false) {
 				echo mysqli_error($conn);
 			}
 			
-			$board = mysqli_fetch_assoc($result);
+			$post = mysqli_fetch_assoc($result);
 			
 			printf("<form action='modify_process.php' method='post'>");
-			printf("<input type='hidden' name='bno' value='%d'>", $board['bno']);
+			printf("<input type='hidden' name='post_id' value='%d'>", $post['post_id']);
 			printf("<table>");
-			printf("<tr><th>BNO</th> <td>%d</td></tr>", $board['bno']);
-			printf("<tr><th>Writer</th> <td><input type='text' name='board_writer' value='%s'></td></tr>", $board['writer']);
-			printf("<tr><th>Hits</th> <td>%d</td></tr>", $board['hits']);
-			printf("<tr><th>Date</th> <td>%s</td></tr>", $board['last_update']);
-			printf("<tr><th>Title</th> <td><input type='text' name='board_title' value='%s'></td></tr>",  $board['title'] );
+			printf("<tr><th>글번호</th> <td>%d</td></tr>", $post['post_id']);
+			printf("<tr><th>작성자</th> <td><input type='text' name='writer' value='%s'></td></tr>", $post['writer']);
+			printf("<tr><th>조회수</th> <td>%d</td></tr>", $post['hits']);
+			printf("<tr><th>작성일</th> <td>%s</td></tr>", $post['last_update']);
+			printf("<tr><th>제목</th> <td><input type='text' name='title' value='%s'></td></tr>",  $post['title'] );
 			printf("<tr><td height='10' colspan='2'></td></tr>");
-			printf("<tr><th colspan='2' align='center'>Content</th></tr>");
-			printf("<tr><td id='td_content' colspan='2' align='center'><textarea name='board_content' rows='12' cols='135'>%s</textarea>", $board['content']);
+			printf("<tr><th colspan='2' align='center'>내 용</th></tr>");
+			printf("<tr><td id='td_content' colspan='2' align='center'><textarea name='content' rows='12' cols='135'>%s</textarea>", $post['content']);
 			printf("<br><input type='submit' value='확인'></td></tr>");
 			printf("</table>");
 			printf("</form>");
