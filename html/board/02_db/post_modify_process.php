@@ -10,8 +10,7 @@
 	}
 	
 	modify_post($post);
-	
-	printf("<a href='./post_write_form.php?board_id=%d'><button>글쓰기</button></a><br>", $board_id);
+
 	printf("<a href='./index.php'><button>글목록</button></a><br>");
 	
 ?>

@@ -5,7 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/style1.css"> 
 </head>
 <body>
-	<h1>POST 수정</h1>
+	<h1>POST 수정하기</h1>
 	<div class="content">	
 		<?php
 			$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
@@ -21,7 +21,7 @@
 		
 			printf("<h3>%s 게시판</h3>", $board_info[$board_id]);
 			printf("<hr>");
-			printf("<form action='modify_process.php' method='post'>");
+			printf("<form action='post_modify_process.php' method='post'>");
 			printf("<input type='hidden' name='post_id' value='%d'>", $post['post_id']);
 			printf("<table>");
 			printf("<tr><th>글번호</th> <td>%d</td></tr>", $post['post_id']);
@@ -39,8 +39,6 @@
 			printf("<br><a href='./post_write_form.php'><button>글쓰기</button></a>");
 			printf("<a href='./index.php'><button>글목록</button></a><br>");
 			
-			mysqli_free_result($result);
-			mysqli_close($conn);
 		?>
 	</div>
 	<hr>
