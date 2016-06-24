@@ -32,14 +32,12 @@
 	
 	// 게시판 id에 해당하는 모든 게시물을 출력해주는 함수.
 	function get_posts($board_id){
-		$select_query = sprintf("SELECT * FROM post WHERE board_id = %s ORDER BY post_id DESC", $board_id);
-	
 		$i=0;
 		$posts = array();
-			
+		
+		$select_query = sprintf("SELECT * FROM post WHERE board_id = %s ORDER BY post_id DESC", $board_id);	
 		$conn = get_sqlserver_conn();
 		$result = mysqli_query($conn, $select_query);
-	
 		while($post = mysqli_fetch_assoc($result)){
 			$posts[$i]['post_id'] = $post['post_id'];
 			$posts[$i]['writer'] = $post['writer'];
@@ -67,7 +65,7 @@
 		mysqli_close($conn);
 	}
 	
-	// 게시물(post) 정보를 리턴해주는 함수.
+	// 게시물 컨텐츠를 리턴해주는 함수.
 	function get_post($post_id){
 		
 		$conn = get_sqlserver_conn();
@@ -100,7 +98,17 @@
 		echo "성공적으로 작성되었습니다. <br>";
 	}
 	
-
+	// 게시물 수정 하는 함수.
+	function modify_post($post){
+		
+		$conn = get_sqlserver_conn();
+		$update_query = sprintf("UPDATE post SET writer='%s', title='%s', content='%s', last_update=now() WHERE post_id='%d'", $post['writer'], $post['title'], $post['content'], $post['post_id']);		
+		if (mysqli_query($conn, $update_query) === false) {
+			die(mysqli_error($conn));
+		}
+		echo "성공적으로 수정되었습니다. <br>";
+		mysqli_close($conn);
+	}
 
 	
 	

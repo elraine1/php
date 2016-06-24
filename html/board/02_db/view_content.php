@@ -58,11 +58,11 @@
 			printf("<tr><td id='td_content' colspan='2'><textarea disabled rows='12' cols='135'>%s</textarea></td></tr>", $post['content']);
 			printf("</table>");
 			printf("<br><a href='./board_write_form.php?board_id=%d'><button>글작성</button></a>", $board_id);
+			printf("<a href='./board_modify_form.php?board_id=%d&post_id=%d'><button>글수정</button></a>", $board_id, $post['post_id']);
+			printf("<a href='./delete_process.php?post_id=%d'><button>글삭제</button></a><br>", $post['post_id']);
 			
 		?>	
 
-		<a href="./board_modify_form.php?post_id=<?php echo $post['post_id']?>"><button>글수정</button></a>
-		<a href="./delete_process.php?post_id=<?php echo $post['post_id']?>"><button>글삭제</button></a><br>
 		<a href="./index.php"><button>글목록</button></a><br>
 	</div>
 	<hr>

@@ -2,53 +2,25 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <html>
 <head>
-	<style type="text/css">
-	table{
-		width:50%;
-		align:center;
-		border: 1px solid LightSeaGreen;
-		border-collapse: collapse;
-		margin: 10px;
-	}
-	th{
-		background-color: LightSkyBlue ;
-		border: 1px solid LightSeaGreen;
-	}
-	td, tr{
-		border: 1px solid LightSeaGreen;
-		border-collapse: collapse;
-	}
-	#td_num{
-		text-align:center;
-	}
-	#td_content{
-		 height: 150px;
-	}
-	</style>
-	
+	<link rel="stylesheet" type="text/css" href="/css/style1.css"> 
 </head>
 <body>
-
-	<h1>나의 게시판</h1>
-	<hr>
+	<h1>POST 수정</h1>
 	<div class="content">	
 		<?php
 			$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
 			require_once($mylib_path);
-		
+			
 			if($_SERVER['REQUEST_METHOD'] == 'GET'){
 				$post_id = $_GET['post_id'];
+				$board_id = $_GET['board_id'];
 			}	
-			$conn = get_sqlserver_conn();
 			
-			$select_query = sprintf("SELECT * FROM post WHERE post_id='%d'", $post_id);
-			$result = mysqli_query($conn, $select_query);// result_set
-			if (($post = mysqli_query($conn, $select_query)) === false) {
-				die(mysqli_error($conn));
-			}
-			
-			$post = mysqli_fetch_assoc($result);
-			
+			$board_info = get_all_board_info();
+			$post = get_post($post_id);		
+		
+			printf("<h3>%s 게시판</h3>", $board_info[$board_id]);
+			printf("<hr>");
 			printf("<form action='modify_process.php' method='post'>");
 			printf("<input type='hidden' name='post_id' value='%d'>", $post['post_id']);
 			printf("<table>");
@@ -63,12 +35,13 @@
 			printf("<br><input type='submit' value='확인'></td></tr>");
 			printf("</table>");
 			printf("</form>");
-
+			
+			printf("<br><a href='./board_write.php'><button>글쓰기</button></a>");
+			printf("<a href='./index.php'><button>글목록</button></a><br>");
+			
 			mysqli_free_result($result);
 			mysqli_close($conn);
-		?>	
-		<a href="./board_write.php"><button>글작성</button></a>
-		<a href="./index.php"><button>글목록</button></a> <br>
+		?>
 	</div>
 	<hr>
 	
