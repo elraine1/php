@@ -50,23 +50,26 @@
 				foreach($board_info as $board_id => $board_name){		// 게시판별 테이블 작성.
 					printf("<hr>");
 					printf("<h3>%s 게시판</h3>", $board_name);
+					
+					$posts = get_posts($board_id);
+					
 					printf("<table>");
 					printf("<tr> <th width='40'>글번호</th> <th width='80'>작성자</th> <th width='200'>제목</th> <th width='40'>조회수</th> <th width='90'>작성일</th></tr>");
 					
-					$result = get_board_info($board_id);
-					while($post = mysqli_fetch_assoc($result)) {
+					for($i=0; $i < count($posts); $i++){
 						printf("<tr>");
-						printf("<td id='td_num' align='center'><a href='./view_content.php?board_id=%d&post_id=%d'>%d</a></td>", $board_id, $post['post_id'], $post['post_id']);
-						printf("<td align='center'>%s</td>", $post['writer']);
-						printf("<td align='left'><a href='./view_content.php?board_id=%d&post_id=%d'>%s</td>", $board_id, $post['post_id'],$post['title']);
-						printf("<td align='center'>%d</td>", $post['hits']);
-						printf("<td align='center'>%s</td>", $post['last_update']);
+						printf("<td id='td_num' align='center'><a href='./view_content.php?board_id=%d&post_id=%d'>%d</a></td>", $board_id, $posts[$i]['post_id'], $posts[$i]['post_id']);
+						printf("<td align='center'>%s</td>", $posts[$i]['writer']);
+						printf("<td align='left'><a href='./view_content.php?board_id=%d&post_id=%d'>%s</td>", $board_id, $posts[$i]['post_id'],$posts[$i]['title']);
+						printf("<td align='center'>%d</td>", $posts[$i]['hits']);
+						printf("<td align='center'>%s</td>", $posts[$i]['last_update']);
 						printf("</tr>");
 					}
-					printf("</table>");
+
+					printf("</table>");	
+					printf("<a href='./board_write_form.php?board_id=%d'><button>글쓰기</button></a><br>", $board_id);
 					
-					printf("<a href='./board_write_form.php?board_id=%d'><button>글쓰기</button></a>", $board_id);
-					printf("<br>");
+
 				}
 				
 			?>

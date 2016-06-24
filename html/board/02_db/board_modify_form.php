@@ -44,7 +44,7 @@
 			$select_query = sprintf("SELECT * FROM post WHERE post_id='%d'", $post_id);
 			$result = mysqli_query($conn, $select_query);// result_set
 			if (($post = mysqli_query($conn, $select_query)) === false) {
-				echo mysqli_error($conn);
+				die(mysqli_error($conn));
 			}
 			
 			$post = mysqli_fetch_assoc($result);

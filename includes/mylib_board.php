@@ -16,7 +16,6 @@
 
 	// 게시판 id와 게시판 이름을 반환하는 함수로, board['id'] = name 형태의 배열로 리턴.
 	function get_all_board_info(){
-		
 		$select_query = sprintf("SELECT * FROM board");
 		
 		$conn = get_sqlserver_conn();
@@ -31,16 +30,30 @@
 		return $board_info;
 	}
 	
-	// 게시판 id에 해당하는 모든 게시물을 리턴해주는 함수.
-	function get_board_info($board_id){
-		$conn = get_sqlserver_conn();
+	// 게시판 id에 해당하는 모든 게시물을 출력해주는 함수.
+	function get_posts($board_id){
 		$select_query = sprintf("SELECT * FROM post WHERE board_id = %s ORDER BY post_id DESC", $board_id);
-		$result = mysqli_query($conn, $select_query);				
+	
+		$i=0;
+		$posts = array();
+			
+		$conn = get_sqlserver_conn();
+		$result = mysqli_query($conn, $select_query);
+	
+		while($post = mysqli_fetch_assoc($result)){
+			$posts[$i]['post_id'] = $post['post_id'];
+			$posts[$i]['writer'] = $post['writer'];
+			$posts[$i]['title'] = $post['title'];
+			$posts[$i]['content'] = $post['content'];
+			$posts[$i]['hits'] = $post['hits'];
+			$posts[$i]['last_update'] = $post['last_update'];
+			$i++;
+		}
 		
 		mysqli_free_result($result);
 		mysqli_close($conn);
 		
-		return $result;
+		return $posts;
 	}
 	
 	// 조회수 증가 함수.
