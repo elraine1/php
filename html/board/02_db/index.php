@@ -58,11 +58,17 @@
 					
 					for($i=0; $i < count($posts); $i++){
 						printf("<tr>");
-						printf("<td id='td_num' align='center'><a href='./view_post.php?board_id=%d&post_id=%d'>%d</a></td>", $board_id, $posts[$i]['post_id'], $posts[$i]['post_id']);
+						printf("<td id='td_num' align='center'><a href='./view_post.php?post_id=%d'>%d</a></td>", $posts[$i]['post_id'], $posts[$i]['post_id']);
 						printf("<td align='center'>%s</td>", $posts[$i]['writer']);
-						printf("<td align='left'><a href='./view_post.php?board_id=%d&post_id=%d'>%s</td>", $board_id, $posts[$i]['post_id'],$posts[$i]['title']);
+						
+						if($posts[$i]['comment_count'] > 0){
+							printf("<td align='left'><a href='./view_post.php?post_id=%d'> %s <b>[%d]</b></td>", $posts[$i]['post_id'],$posts[$i]['title'], $posts[$i]['comment_count']);
+						}else{
+							printf("<td align='left'><a href='./view_post.php?post_id=%d'> %s </td>", $posts[$i]['post_id'],$posts[$i]['title']);
+						}
+						
 						printf("<td align='center'>%d</td>", $posts[$i]['hits']);
-						printf("<td align='center'>%s</td>", $posts[$i]['last_update']);
+						printf("<td align='center'>%s</td>", convert_time_string($posts[$i]['last_update']));
 						printf("</tr>");
 					}
 

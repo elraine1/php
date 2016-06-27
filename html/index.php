@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <html>
+
+<head>
+	<title>Hello, World!</title>
+  
+</head>
 <style type="text/css">
 	h1 {
 		text-align: center;
@@ -8,9 +13,8 @@
 	.wrap {
 		background-color: LightSalmon;
 		margin: 0 auto;
-		height: 900px;
-		padding-top: 10px;
-		padding-bottom: 60px;
+		height: 1000px;
+		padding: 20px 50px 50px 50px;
 	}
 	#div_board {
 		border: 1px solid #ededed;
@@ -38,8 +42,8 @@
 		color:blue;
 	}
 </style>
-
-<body>
+<body>  
+	 
 	<div class="wrap">
 		<h1>My PHP Pages</h1>
 		<hr>
@@ -72,4 +76,7 @@
 		<hr>
 	</div>
 </body>
+
+  
+
 </html>

@@ -2,7 +2,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="/css/style1.css"> 
+	<link rel="stylesheet" type="text/css" href="/style/style1.css">
 </head>
 <body>
 	<h1>POST 수정하기</h1>
@@ -13,13 +13,12 @@
 			
 			if($_SERVER['REQUEST_METHOD'] == 'GET'){
 				$post_id = $_GET['post_id'];
-				$board_id = $_GET['board_id'];
 			}	
 			
 			$board_info = get_all_board_info();
 			$post = get_post($post_id);		
 		
-			printf("<h3>%s 게시판</h3>", $board_info[$board_id]);
+			printf("<h3>%s 게시판</h3>", $board_info[$post['board_id']]);
 			printf("<hr>");
 			printf("<form action='post_modify_process.php' method='post'>");
 			printf("<input type='hidden' name='post_id' value='%d'>", $post['post_id']);

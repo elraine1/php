@@ -30,7 +30,7 @@
 		return $board_info;
 	}
 	
-	// 게시판 id에 해당하는 모든 게시물을 출력해주는 함수.
+	// 게시판 ID(board_id)에 해당하는 모든 게시물을 출력해주는 함수.
 	function get_posts($board_id){
 		$i=0;
 		$posts = array();
@@ -45,6 +45,7 @@
 			$posts[$i]['content'] = $post['content'];
 			$posts[$i]['hits'] = $post['hits'];
 			$posts[$i]['last_update'] = $post['last_update'];
+			$posts[$i]['comment_count'] = get_count_comment($post['post_id']);
 			$i++;
 		}
 		
@@ -54,13 +55,28 @@
 		return $posts;
 	}
 	
+	// post_id 에 딸려있는 댓글의 개수를 알려주는 함수. 
+	function get_count_comment($post_id){
+		$count = 0;
+		$select_query = sprintf("SELECT count(*) as count FROM comment where post_id = %d", $post_id);
+		$conn = get_sqlserver_conn();
+		
+		if(($result = mysqli_query($conn, $select_query)) === false){
+			die("Error updating record: " . mysqli_error($conn));
+		}
+		$tmp = mysqli_fetch_assoc($result);
+		$count = $tmp['count'];
+		return $count;
+	}
+	
+	
 	// 조회수 증가 함수.
 	function update_hits($post_id){
 		
 		$conn = get_sqlserver_conn();
 		$update_query = sprintf("UPDATE post SET hits=hits+1 WHERE post_id='%d'", $post_id);
 		if(!(mysqli_query($conn, $update_query))){
-			echo "Error updating record: " . mysqli_error($conn);
+			die("Error updating record: " . mysqli_error($conn));
 		}
 		mysqli_close($conn);
 	}
@@ -69,10 +85,10 @@
 	function get_post($post_id){
 		
 		$conn = get_sqlserver_conn();
-		$select_query = "SELECT * FROM post WHERE post_id='".$post_id."';";
-		$result = mysqli_query($conn, $select_query);// result_set
-		if (($board = mysqli_query($conn, $select_query)) === false) {
-			echo mysqli_error($conn);
+		$select_query = sprintf("SELECT * FROM post WHERE post_id='%d'", $post_id);
+		
+		if (($result = mysqli_query($conn, $select_query)) === false) {
+			die(mysqli_error($conn));
 		}
 		$post = mysqli_fetch_assoc($result);
 		
@@ -80,16 +96,11 @@
 	}
 	
 	// 게시물 작성해주는 함수.
-	function post_upload($board){
-		// 작성자, 제목, 컨텐츠 중 내용이 하나라도 빠지면 die.
-		if($board['writer'] == '' || $board['title'] == '' || $board['content'] == '' ){
-			echo "<br><a href='./post_write_form.php'><button>글쓰기</button></a>";
-			echo "<a href='./index.php'><button>글목록</button></a> <br>";
-			die('not enough data.');
-		}
+	function post_upload($post){
 				
 		$conn = get_sqlserver_conn();
-		$insert_query = sprintf("INSERT INTO post(writer, title, content, board_id) values('%s', '%s', '%s', '%d')", $board['writer'], $board['title'], $board['content'], $board['board_id']);		
+		$insert_query = sprintf("INSERT INTO post(writer, title, content, board_id) values('%s', '%s', '%s', '%d')", $post['writer'], $post['title'], $post['content'], $post['board_id']);		
+		
 		if (mysqli_query($conn, $insert_query) === false) {
 			die(mysqli_error($conn));
 		}
@@ -101,12 +112,62 @@
 	function modify_post($post){
 		
 		$conn = get_sqlserver_conn();
-		$update_query = sprintf("UPDATE post SET writer='%s', title='%s', content='%s', last_update=now() WHERE post_id='%d'", $post['writer'], $post['title'], $post['content'], $post['post_id']);		
+		$update_query = sprintf("UPDATE post SET writer='%s', title='%s', content='%s', last_update=now() WHERE post_id='%d'", $post['writer'], $post['title'], $post['content'], $post['post_id']);	
+		
 		if (mysqli_query($conn, $update_query) === false) {
 			die(mysqli_error($conn));
 		}
 		echo "성공적으로 수정되었습니다. <br>";
 		mysqli_close($conn);
 	}
+	
+	
+	// 댓글 작성 함수.
+	function comment_upload($comment){
+
+		$conn = get_sqlserver_conn();
+		$insert_query = sprintf("INSERT INTO comment(post_id, writer, comment) VALUES(%d, '%s', '%s')", $comment['post_id'], $comment['writer'], $comment['comment']);
+			
+		if (mysqli_query($conn, $insert_query) === false) {
+			die(mysqli_error($conn));
+		}
+		printf("댓글 작성 완료! <br><br>");	
+		printf("<a href='./index.php'><button>글목록</button></a><br>");
+	}
+	
+	// 해당 게시글의 모든 댓글을 가져오는 함수. 
+	function get_comments($post_id){		
+		$i=0;
+		$comments = array();
+		$select_query = sprintf("SELECT writer, comment, written_date FROM comment where post_id = %d", $post_id);				
+
+		$conn = get_sqlserver_conn();
+		$result = mysqli_query($conn, $select_query);
+		if($result === false){
+			die(mysqli_error($conn));
+		}
+
+		while($comment = mysqli_fetch_assoc($result)){
+			$comments[$i]['writer'] = $comment['writer'];
+			$comments[$i]['comment'] = $comment['comment'];
+			$comments[$i]['w_date'] = $comment['written_date'];
+			$i++;
+		}
+		
+		mysqli_free_result($result);
+		mysqli_close($conn);
+		return $comments;
+	}
+
+	
+	
+	
+	// TIMEZONE 변경함수. UTC -> Asia/Seoul.
+	function convert_time_string($time_string_from_db ) {
+		$datetime = date_create($time_string_from_db , timezone_open('UTC'));
+		$datetime = date_timezone_set($datetime, timezone_open('Asia/Seoul'));
+		return date_format($datetime, 'Y-m-d H:i:s');
+	}
+
 	
 ?>
