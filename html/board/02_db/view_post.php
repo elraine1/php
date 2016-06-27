@@ -71,7 +71,7 @@
 			</form>				
 		</div>
 	</div>
-		<a href="./index.php"><button>글목록</button></a><br>
+		<a href="./index.php"><button>홈으로</button></a><br>
 	<hr>
 	
 </body>

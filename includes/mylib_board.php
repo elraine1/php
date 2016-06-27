@@ -31,25 +31,25 @@
 	}
 	
 	// 게시판 ID(board_id)에 해당하는 모든 게시물을 출력해주는 함수.
-	function get_posts($board_id){
+	function get_posts($board_id, $page){
 		$i=0;
 		$posts = array();
 		
-		$select_query = sprintf("SELECT * FROM post WHERE board_id = %s ORDER BY post_id DESC", $board_id);	
+		//$select_query = sprintf("SELECT * FROM post WHERE board_id = %s ORDER BY post_id DESC", $board_id);	
 		
-		/*
+		
 		$page_size = 20; 
-		$post_id_start;
-		$post_id_end; 
+		$post_id_start = ($page - 1) * $page_size;
+		$post_id_end = $page * $page_size; 
 		
-		$select_query2 = sprintf("  SELECT *
+		$select_query = sprintf("  SELECT *
 									FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
 											FROM (SELECT @ROWNUM := 0) as R, post	
 											WHERE board_id = %d 
 											ORDER BY post_id desc) as post
 									WHERE %d < post.ROWNUM and post.ROWNUM < %d
 									", $board_id, $post_id_start, $post_id_end);
-									*/
+									
 		
 		$conn = get_sqlserver_conn();
 		$result = mysqli_query($conn, $select_query);

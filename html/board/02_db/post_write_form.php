@@ -44,7 +44,7 @@
 				</tr>
 			</table>
 		</form>
-		<a href="./index.php"><button>전체글 보기</button></a> <br>
+		<a href="./index.php"><button>홈으로</button></a> <br>
 		<hr>
 	</div>
 
