@@ -36,6 +36,21 @@
 		$posts = array();
 		
 		$select_query = sprintf("SELECT * FROM post WHERE board_id = %s ORDER BY post_id DESC", $board_id);	
+		
+		/*
+		$page_size = 20; 
+		$post_id_start;
+		$post_id_end; 
+		
+		$select_query2 = sprintf("  SELECT *
+									FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
+											FROM (SELECT @ROWNUM := 0) as R, post	
+											WHERE board_id = %d 
+											ORDER BY post_id desc) as post
+									WHERE %d < post.ROWNUM and post.ROWNUM < %d
+									", $board_id, $post_id_start, $post_id_end);
+									*/
+		
 		$conn = get_sqlserver_conn();
 		$result = mysqli_query($conn, $select_query);
 		while($post = mysqli_fetch_assoc($result)){
@@ -169,5 +184,25 @@
 		return date_format($datetime, 'Y-m-d H:i:s');
 	}
 
+	
+	/// 더미게시물 생성.
+	function make_dummy_post($conn, $count){
+		
+		$insert_query = "";
+		for($i=0; $i<$count; $i++){
+			
+			$post['writer'] = "writer" . $i;
+			$post['title'] = "title" . $i;
+			$post['content'] = "content" . $i;
+			$post['board_id'] = rand(1,2);
+			
+			$insert_query = sprintf("INSERT INTO post(writer, title, content, board_id) VALUES('%s', '%s', '%s', %d)", $post['writer'], $post['title'], $post['content'], $post['board_id']);
+			mysqli_query($conn, $insert_query);			
+			if (mysqli_query($conn, $insert_query) === false) {
+				die(mysqli_error($conn));
+			}
+		}
+		
+	}
 	
 ?>

@@ -31,7 +31,7 @@
 				</tr>
 				<tr>
 					<th><h5>제목</h5></th>
-					<td><input type="text" class="input_text" name="title"></td>
+					<td><input type="text" class="input_text" name="title" size='78'></td>
 				</tr>
 				<tr>
 					<th><h5>내용</h5></th>
