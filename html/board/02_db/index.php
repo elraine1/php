@@ -41,48 +41,27 @@
 	<div id="wrap">
 		
 		<h2>게시판 연습</h2>
-		<div id="div_table">		
+		<div id="div_table">
+		
 			<?php	
 				$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
 				require_once($mylib_path);
 				
-				$board_info = get_all_board_info();				
-				foreach($board_info as $board_id => $board_name){		// 게시판별 테이블 작성.
-					printf("<hr>");
-					printf("<h3>%s 게시판</h3>", $board_name);
-					
-					$posts = get_posts($board_id);
-					
-					printf("<table>");
-					printf("<tr> <th width='40'>글번호</th> <th width='80'>작성자</th> <th width='200'>제목</th> <th width='40'>조회수</th> <th width='90'>작성일시</th></tr>");
-					
-					for($i=0; $i < count($posts); $i++){
-						printf("<tr>");
-						printf("<td id='td_num' align='center'><a href='./view_post.php?post_id=%d'>%d</a></td>", $posts[$i]['post_id'], $posts[$i]['post_id']);
-						printf("<td align='center'>%s</td>", $posts[$i]['writer']);
-						
-						if($posts[$i]['comment_count'] > 0){
-							printf("<td align='left'><a href='./view_post.php?post_id=%d'> %s <b>[%d]</b></td>", $posts[$i]['post_id'],$posts[$i]['title'], $posts[$i]['comment_count']);
-						}else{
-							printf("<td align='left'><a href='./view_post.php?post_id=%d'> %s </td>", $posts[$i]['post_id'],$posts[$i]['title']);
-						}
-						
-						printf("<td align='center'>%d</td>", $posts[$i]['hits']);
-						printf("<td align='center'>%s</td>", convert_time_string($posts[$i]['last_update']));
-						printf("</tr>");
-					}
-
-					printf("</table>");	
-					printf("<a href='./post_write_form.php?board_id=%d'><button>글쓰기</button></a><br><br>", $board_id);
-					
-
-				}
+				$board_info = get_all_board_info();
 				
+				printf("<ul>");
+				foreach($board_info as $board_id => $board_name){		// 게시판 리스트(링크) 출력
+					printf("<li><h3><a href='board_list.php?board_id=%d&page=1'>%s 게시판</a></h3></li>", $board_id, $board_name);
+				}
+				printf("</ul>");
 			?>
-			<a href="./index.php"><button>전체글 보기</button></a>
+			<a href="./index.php"><button>홈으로</button></a>
 			<br>
 		</div>
-		<hr>
+		<hr>	
+		<?php 
+			printf("<a href='make_dummy.php'><button>더미 생성</button></a>");
+		?>
 		<a href="/index.php"><button>처음으로</button></a> <br>
 	</div>	
 
