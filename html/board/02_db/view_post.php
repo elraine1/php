@@ -71,7 +71,7 @@
 						<td><input type="submit" value="확인" align="center"></td>
 					</tr>						
 				</table>
-			</form>				
+			</form>	
 		</div>
 	</div>
 		<a href="./index.php"><button>홈으로</button></a><br>
