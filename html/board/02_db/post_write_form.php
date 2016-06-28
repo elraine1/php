@@ -44,7 +44,14 @@
 				</tr>
 			</table>
 		</form>
-		<a href="./index.php"><button>홈으로</button></a> <br>
+		
+	<?php
+		
+		printf("<br>");
+		printf("<a href='./board_list.php?board_id=%d&page=1'><button>글목록</button></a>", $board_id);
+		printf("<a href='./index.php'><button>홈으로</button></a>");
+		printf("<br>");
+	?>
 		<hr>
 	</div>
 

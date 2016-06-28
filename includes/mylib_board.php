@@ -63,6 +63,7 @@
 		return $posts;
 	}
 			
+	// post_id를 입력받아 post가 포함된 page 번호를 리턴해주는 함수.
 	function get_page_by_post_id($board_id, $post_id){
 		$page_size=20;
 		$conn = get_sqlserver_conn();

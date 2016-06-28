@@ -64,13 +64,14 @@
 		printf("</table>");	
 
 		// Block Paging
+		// 이전 block, 다음 block 이 없는 경우 <a> 태그 사용 안 함. 
 		if($block_start == 1){
 			printf("[이전]");
 		}else{
 			printf("[<a href='./board_list.php?board_id=%d&page=%d'>이전</a>]", $board_id, $block_start-1);
 		}
 		
-		// Page Link 
+		// Page Link (현재 page는 <a>태그 사용 안 함.)
 		for($i = $block_start ; $i < $block_end ; $i++){
 			if($i == $page){
 				printf("[<b>%d</b>]", $i);

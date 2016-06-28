@@ -11,7 +11,7 @@
 	
 	// 작성자, 제목, 컨텐츠 중 내용이 하나라도 빠지면 die.
 	if($comment['writer'] == '' || $comment['comment'] == '' ){
-		printf("<br><a href='./post_write_form.php'><button>글쓰기</button></a>");
+	printf("<br><a href='./view_post.php?post_id=%s'><button>원래 글로 돌아가기</button></a>", $comment['post_id']);
 		printf("<a href='./index.php'><button>홈으로</button></a><br>");
 		die('not enough data.');
 	}
