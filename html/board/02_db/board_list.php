@@ -66,9 +66,9 @@
 		// Block Paging
 		// 이전 block, 다음 block 이 없는 경우 <a> 태그 사용 안 함. 
 		if($block_start == 1){
-			printf("[이전]");
+			printf("[◀이전]");
 		}else{
-			printf("[<a href='./board_list.php?board_id=%d&page=%d'>이전</a>]", $board_id, $block_start-1);
+			printf("[<a href='./board_list.php?board_id=%d&page=%d'>◀이전</a>]", $board_id, $block_start-1);
 		}
 		
 		// Page Link (현재 page는 <a>태그 사용 안 함.)
@@ -78,12 +78,12 @@
 			}else {
 				printf("[<a href='board_list.php?board_id=%d&page=%d'>%d</a>]", $board_id, $i, $i);
 			}
-		}
 		
+		}
 		if($block_end == $total_page){
-			printf("[다음]");
+			printf("[다음▶]");
 		}else{
-			printf("[<a href='./board_list.php?board_id=%d&page=%d'>다음</a>]", $board_id, $block_end);
+			printf("[<a href='./board_list.php?board_id=%d&page=%d'>다음▶</a>]", $board_id, $block_end);
 		}
 		
 		printf("<br><br><a href='./post_write_form.php?board_id=%d'><button>글쓰기</button></a><br>", $board_id);

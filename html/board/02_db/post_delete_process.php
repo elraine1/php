@@ -13,7 +13,7 @@
 		die(mysqli_error($conn));
 	}
 	printf("성공적으로 삭제되었습니다. <br>");
-	printf("<a href='./index.php'><button>글목록</button></a> <br>");
+	printf("<a href='./index.php'><button>홈으로</button></a> <br>");
 	
 	mysqli_close($conn);
 ?>
