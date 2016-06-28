@@ -22,8 +22,7 @@
 	<?php 
 		$board_info = get_all_board_info();
 		$posts = get_posts($board_id, $page);
-//		$curr_block = 
-			
+
 		printf("<hr>");
 		printf("<h3>%s 게시판</h3>", $board_info[$board_id]);
 		printf("<table>");
@@ -48,14 +47,41 @@
 		printf("</table>");	
 		
 		//// 페이징.
-//		$block_size = 5;
-//		$block_start = $block_size;
-//		$block_end;
-		printf("[이전]");
-		for($i=1; $i<=5; $i++){
-			printf("[<a href='board_list.php?board_id=%d&page=%d'>%d</a>]", $board_id, $i, $i);
+		
+		$page_size = 20; 
+		$total_post = get_total_post($board_id);
+		$total_page = ($total_post - 1) / $page_size + 1;
+
+		$block_size = 10;
+		$curr_block = intval(($page - 1) / $block_size) + 1;
+		$block_start = ($curr_block - 1) * $block_size + 1;
+		$block_end = $block_start + $block_size;
+		
+		if($block_end > $total_page){
+			$block_end = $total_page;
 		}
-		printf("[다음]");
+
+		if($block_start == 1){
+			printf("[이전]");
+		}else{
+			printf("[<a href='./board_list.php?board_id=%d&page=%d'>이전</a>]", $board_id, $block_start-1);
+		}
+		
+		for($i = $block_start ; $i < $block_end ; $i++){
+			if($i == $page){
+				printf("[<b>%d</b>]", $i);
+			}else {
+				printf("[<a href='board_list.php?board_id=%d&page=%d'>%d</a>]", $board_id, $i, $i);
+			}
+		}
+		
+		if($block_end == $total_page){
+			printf("[다음]");
+		}else{
+			printf("[<a href='./board_list.php?board_id=%d&page=%d'>다음</a>]", $board_id, $block_end);
+		}
+		
+		
 		printf("<br><a href='./post_write_form.php?board_id=%d'><button>글쓰기</button></a><br><br>", $board_id);
 			
 	?>

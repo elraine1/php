@@ -20,3 +20,6 @@ td, tr{
 #td_content{
 	 height: 150px;
 }
+a{
+	text-decoration: none;
+}
