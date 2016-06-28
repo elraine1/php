@@ -6,7 +6,7 @@
 </head>
 <body>
 
-	<h1>POST</h1>
+	<h2>글 보기</h2>
 	<hr>
 	<div class="content">	
 		<?php

@@ -20,8 +20,26 @@
 	<div class="content">
 	<h2>글 목록</h2>
 	<?php 
+		
+		//// 페이징.
+		$page_size = 20; 
+		$post_id_start = ($page - 1) * $page_size;
+		$post_id_end = $page * $page_size; 
+		
+		$total_post = get_total_post($board_id);
+		$total_page = ($total_post - 1) / $page_size + 1;
+		
+		$block_size = 10;
+		$curr_block = intval(($page - 1) / $block_size) + 1;
+		$block_start = ($curr_block - 1) * $block_size + 1;
+		$block_end = $block_start + $block_size;
+		
+		if($block_end > $total_page){
+			$block_end = $total_page;
+		}
+		
 		$board_info = get_all_board_info();
-		$posts = get_posts($board_id, $page);
+		$posts = get_posts($board_id, $post_id_start, $post_id_end);
 
 		printf("<hr>");
 		printf("<h3>%s 게시판</h3>", $board_info[$board_id]);
@@ -43,30 +61,16 @@
 			printf("<td align='center'>%s</td>", convert_time_string($posts[$i]['last_update']));
 			printf("</tr>");
 		}
-		
 		printf("</table>");	
-		
-		//// 페이징.
-		
-		$page_size = 20; 
-		$total_post = get_total_post($board_id);
-		$total_page = ($total_post - 1) / $page_size + 1;
 
-		$block_size = 10;
-		$curr_block = intval(($page - 1) / $block_size) + 1;
-		$block_start = ($curr_block - 1) * $block_size + 1;
-		$block_end = $block_start + $block_size;
-		
-		if($block_end > $total_page){
-			$block_end = $total_page;
-		}
-
+		// Block Paging
 		if($block_start == 1){
 			printf("[이전]");
 		}else{
 			printf("[<a href='./board_list.php?board_id=%d&page=%d'>이전</a>]", $board_id, $block_start-1);
 		}
 		
+		// Page Link 
 		for($i = $block_start ; $i < $block_end ; $i++){
 			if($i == $page){
 				printf("[<b>%d</b>]", $i);
@@ -81,8 +85,7 @@
 			printf("[<a href='./board_list.php?board_id=%d&page=%d'>다음</a>]", $board_id, $block_end);
 		}
 		
-		
-		printf("<br><a href='./post_write_form.php?board_id=%d'><button>글쓰기</button></a><br><br>", $board_id);
+		printf("<br><br><a href='./post_write_form.php?board_id=%d'><button>글쓰기</button></a><br>", $board_id);
 			
 	?>
 		<hr>

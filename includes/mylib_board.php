@@ -31,25 +31,19 @@
 	}
 	
 	// 게시판 ID(board_id)에 해당하는 모든 게시물을 출력해주는 함수.
-	function get_posts($board_id, $page){
-		$i=0;
-		$posts = array();
-		
-		//$select_query = sprintf("SELECT * FROM post WHERE board_id = %s ORDER BY post_id DESC", $board_id);	
+	function get_posts($board_id, $start, $end){
 
-		$page_size = 20; 
-		$post_id_start = ($page - 1) * $page_size;
-		$post_id_end = $page * $page_size; 
-		
 		$select_query = sprintf("  SELECT *
 									FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
 											FROM (SELECT @ROWNUM := 0) as R, post	
 											WHERE board_id = %d 
 											ORDER BY post_id desc) as post
 									WHERE %d < post.ROWNUM and post.ROWNUM < %d
-									", $board_id, $post_id_start, $post_id_end);
-									
+									", $board_id, $start, $end);
 		
+		$i=0;
+		$posts = array();
+	
 		$conn = get_sqlserver_conn();
 		$result = mysqli_query($conn, $select_query);
 		while($post = mysqli_fetch_assoc($result)){
@@ -68,19 +62,6 @@
 		
 		return $posts;
 	}
-	
-	// post 개수를 리턴해주는 함수.
-	function get_total_post($board_id){
-		$conn = get_sqlserver_conn();
-		$select_query = sprintf("SELECT count(*) as count FROM post WHERE board_id = %d", $board_id);
-		$result = mysqli_query($conn, $select_query);
-		$tmp = mysqli_fetch_assoc($result);
-		$count = $tmp['count'];
-		mysqli_free_result($result);
-		mysqli_close($conn);
-		return $count;
-	}
-	
 			
 	function get_page_by_post_id($board_id, $post_id){
 		$page_size=20;
@@ -100,6 +81,18 @@
 		mysqli_free_result($result);
 		mysqli_close($conn);
 		return $page;
+	}
+		
+	// post 개수를 리턴해주는 함수.
+	function get_total_post($board_id){
+		$conn = get_sqlserver_conn();
+		$select_query = sprintf("SELECT count(*) as count FROM post WHERE board_id = %d", $board_id);
+		$result = mysqli_query($conn, $select_query);
+		$tmp = mysqli_fetch_assoc($result);
+		$count = $tmp['count'];
+		mysqli_free_result($result);
+		mysqli_close($conn);
+		return $count;
 	}
 	
 	// post_id 에 딸려있는 댓글의 개수를 알려주는 함수. 
