@@ -36,8 +36,7 @@
 		$posts = array();
 		
 		//$select_query = sprintf("SELECT * FROM post WHERE board_id = %s ORDER BY post_id DESC", $board_id);	
-		
-		
+
 		$page_size = 20; 
 		$post_id_start = ($page - 1) * $page_size;
 		$post_id_end = $page * $page_size; 
@@ -69,6 +68,20 @@
 		
 		return $posts;
 	}
+	
+	// post 개수를 리턴해주는 함수.
+	function get_total_post($board_id){
+		$conn = get_sqlserver_conn();
+		$select_query = sprintf("SELECT count(*) as count FROM post WHERE board_id = %d", $board_id);
+		$result = mysqli_query($conn, $select_query);
+		$tmp = mysqli_fetch_assoc($result);
+		$count = $tmp['count'];
+		mysqli_free_result($result);
+		mysqli_close($conn);
+		return $count;
+	}
+	
+
 	
 	// post_id 에 딸려있는 댓글의 개수를 알려주는 함수. 
 	function get_count_comment($post_id){
@@ -196,8 +209,7 @@
 			$post['content'] = "content" . $i;
 			$post['board_id'] = rand(1,2);
 			
-			$insert_query = sprintf("INSERT INTO post(writer, title, content, board_id) VALUES('%s', '%s', '%s', %d)", $post['writer'], $post['title'], $post['content'], $post['board_id']);
-			mysqli_query($conn, $insert_query);			
+			$insert_query = sprintf("INSERT INTO post(writer, title, content, board_id) VALUES('%s', '%s', '%s', %d)", $post['writer'], $post['title'], $post['content'], $post['board_id']);		
 			if (mysqli_query($conn, $insert_query) === false) {
 				die(mysqli_error($conn));
 			}
