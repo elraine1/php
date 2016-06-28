@@ -81,7 +81,26 @@
 		return $count;
 	}
 	
-
+			
+	function get_page_by_post_id($board_id, $post_id){
+		$page_size=20;
+		$conn = get_sqlserver_conn();
+		$select_query = sprintf("   SELECT ROWNUM
+									FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
+											FROM (SELECT @ROWNUM := 0) as R, post	
+											WHERE board_id = %d
+											ORDER BY post_id desc) as post
+									WHERE post_id = %d;
+									", $board_id, $post_id);
+		$result = mysqli_query($conn, $select_query);
+		$tmp = mysqli_fetch_assoc($result);
+		$rownum = $tmp['ROWNUM'];
+		$page = intval(($rownum-1) / $page_size) + 1;
+					
+		mysqli_free_result($result);
+		mysqli_close($conn);
+		return $page;
+	}
 	
 	// post_id 에 딸려있는 댓글의 개수를 알려주는 함수. 
 	function get_count_comment($post_id){

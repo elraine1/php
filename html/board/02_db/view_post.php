@@ -33,9 +33,12 @@
 			printf("<tr><th colspan='2' align='center'>내 용</th></tr>");
 			printf("<tr><td id='td_content' colspan='2'><textarea disabled rows='12' cols='135'>%s</textarea></td></tr>", $post['content']);
 			printf("</table>");
-			printf("<br><a href='./post_write_form.php?board_id=%d'><button>글작성</button></a>", $post['board_id']);
+			
+			printf("<br><a href='./board_list.php?board_id=%d&page=%d'><button>글목록으로</button></a>", $post['board_id'], get_page_by_post_id($post['board_id'], $post['post_id']));
+			printf("<a href='./post_write_form.php?board_id=%d'><button>글작성</button></a>", $post['board_id']);
 			printf("<a href='./post_modify_form.php?post_id=%d'><button>글수정</button></a>", $post['post_id']);
 			printf("<a href='./post_delete_process.php?post_id=%d'><button>글삭제</button></a><br>", $post['post_id']);
+
 			
 			$comments = get_comments($post_id);
 		?>	
