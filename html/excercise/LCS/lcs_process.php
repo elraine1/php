@@ -58,7 +58,6 @@
 					}
 				}
 			}
-			
 				
 			$str1_arr = str_split($str1);
 			$str2_arr = str_split($str2);
@@ -85,7 +84,6 @@
 			}
 			printf("</table>");
 			printf("<hr>");
-			
 			
 			$lcs = array();
 			$find = get_max_in_matrix($lcs_matrix);

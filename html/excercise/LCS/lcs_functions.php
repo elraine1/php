@@ -1,37 +1,11 @@
 <?php 
-
+	// DIFF Table 작성.	
 	function make_diff_table($str1, $str2){
 
 		$str1_arr = str_split($str1);
 		$str2_arr = str_split($str2);
 		$lcs_matrix = array();
 
-		/*
-		printf("<table>");
-		printf("<tr>");
-		printf("<th>＼</th>");
-		for($i=0 ; $i < count($str1_arr); $i++){
-			printf("<th> %s </th>", $str1_arr[$i]);
-		}
-		printf("</tr>");
-
-		for($i=0 ; $i < count($str2_arr); $i++){			
-			printf("<tr>");
-			printf("<th> %s </th>", $str2_arr[$i]);
-			
-			for($j=0 ; $j < count($str1_arr); $j++){
-				printf("<td>");
-				if(strcmp($str2_arr[$i], $str1_arr[$j])==0){
-					echo "&nbsp o &nbsp ";
-				}else {
-					echo "&nbsp &nbsp";
-				}
-				printf("</td>");
-			}
-			printf("</tr>");
-		}
-		printf("</table>");
-*/
 		printf("<hr>");
 		printf("<h4>Diff Table</h4>");
 
@@ -71,8 +45,6 @@
 		$lcs_matrix = $diff_matrix;
 		$end_row = count($diff_matrix)-1;
 		$end_col = count($diff_matrix[0])-1;
-		
-//		echo $end_row . " " . $end_col . "<br>";
 		
 		for($i = $end_row; $i >= 0; $i--){
 			if($diff_matrix[$i][$end_col] == "v"){
