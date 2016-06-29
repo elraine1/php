@@ -73,6 +73,8 @@
 			<a href="/excercise/stringPractice2/practice.php">문자열 처리 연습</a><br>
 			<a href="/excercise/permutation/permutation_index.php">순열 출력하기</a><br>
 			<a href="/excercise/LCS/lcs_index.php">LCS</a><br>
+			<a href="/excercise/diff/diff_index.php">DIFF</a><br>
+			
 		</div>
 		<hr>
 	</div>

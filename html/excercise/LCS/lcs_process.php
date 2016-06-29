@@ -106,6 +106,7 @@
 		?>	
 	
 		<a href="./lcs_index.php"><button>다시하기</button></a><br>
+		<a href="/index.php"><button>홈으로</button></a><br>
 	</div>
 </body>
 
