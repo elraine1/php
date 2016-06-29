@@ -3,6 +3,32 @@
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="/style/style1.css">
+	<style type="text/css">
+		table{
+			width:50%;
+			align:center;
+			border: 1px solid LightSeaGreen;
+			border-collapse: collapse;
+			margin: 10px;
+		}
+		th{
+			background-color: LightSkyBlue ;
+			border: 1px solid LightSeaGreen;
+		}
+		td, tr{
+			border: 1px solid LightSeaGreen;
+			border-collapse: collapse;
+		}
+		#td_num{
+			text-align:center;
+		}
+		#td_content{
+			 height: 150px;
+		}
+		a{
+			text-decoration: none;
+		}
+	</style>
 </head>
 <body>
 	<h1>POST 수정하기</h1>
