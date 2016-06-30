@@ -26,7 +26,7 @@
 	}
 	#div_etc {
 		border: 1px solid #ededed;
-		height: 200px;
+		height: 300px;
 		width: 90%;
 		padding: 0px 15px 15px 15px;
 		margin: 0 auto;
@@ -63,6 +63,8 @@
 			<h3>Security</h3>
 			<a href="/security/01_file/index.php">Session Login</a> <br>
 			<a href="/security/02_hashing/index.php">Hashing</a><br>
+			<a href="/security/03_db/index.php">DB Login</a><br>
+			
 		</div>
 		<hr>
 		<div id="div_etc">
