@@ -12,20 +12,19 @@
 	<div class="wrap">
 		<h2>Diff Checker</h2>
 		<hr>
-		
-		<form action="./diff_process.php" method="post">
+		<form action="./diff_process.php" method="POST">
 			
 			<table>
 				<tr>
 					<th>TEXT1</th><th></th><th>TEXT2</th>
 				</tr>
 				<tr>
-					<td><textarea rows="30" cols="80"></textarea></td>
+					<td><textarea rows="30" cols="80" name="txt1"></textarea></td>
 					<td width='40'></td>
-					<td><textarea rows="30" cols="80"></textarea></td>
+					<td><textarea rows="30" cols="80" name="txt2"></textarea></td>
 				</tr>
 				<tr>
-					<td colspan='3' align="center"><input type="submit" value="Check!"></td><td></td><td></td>
+					<td colspan='3' align="center"><input type="submit" value="Check!"></td>
 				</tr>
 			</table>
 		</form>
