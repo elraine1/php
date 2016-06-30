@@ -51,6 +51,7 @@
 			<h3>Board</h3>
 			<a href="/board/01_file/index.php">My Board</a> <br>
 			<a href="/board/02_db/index.php">My Board(DB)</a> <br>
+			<a href="/board/03_login/index.php">My Board(Login)</a> <br>
 		</div>
 		<hr>
 		<div id="div_board">
