@@ -7,6 +7,18 @@
 		
 		return	$profile;
 	}
+	
+	$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
+	
+	
+	require_once($mylib_path);
+	require_once("session.php");
+	
+	if($_SERVER['REQUEST_METHOD'] == 'GET'){
+		$username = $_GET['username'];
+	}
+	
+	if (check_login()) {		
 		
 ?>
 
@@ -14,15 +26,8 @@
 <body>
 	<div id="wrap">
 	<?php
-		$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
-		$login_bar_path = $_SERVER['DOCUMENT_ROOT'] . '/board/03_login/user/login_header.php';
-		
-		require_once($mylib_path);
-		require_once($login_bar_path);
-			
-		if($_SERVER['REQUEST_METHOD'] == 'GET'){
-			$username = $_GET['username'];
-		}
+
+	
 		
 		echo "<h1>USER PROFILE PAGE</h1>";
 
@@ -37,7 +42,7 @@
 		
 		
 		
-		
+	<?php } ?>		
 		</div>
 		<hr>
 		

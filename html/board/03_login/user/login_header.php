@@ -17,6 +17,10 @@
 <?php 
 	require_once('session.php');	
 	start_session();	// 해당 페이지에서 세션이 켜져있는지 확인 가능?? 
+//	echo $_SERVER["REQUEST_URI"];
+
+	$_SESSION['request_uri'] = $_SERVER["REQUEST_URI"];
+	
 	if(isset($_SESSION['login_status']) && ($_SESSION['login_status'] == true)){ 
 		printf("<div id='logon'>");
 		printf("<span id='span_welcome'> <b>%s</b> 님 반갑습니다.</span> ", $_SESSION['nickname']);
@@ -34,5 +38,6 @@
 		printf("</form>");
 		printf("</div>");
 	}	
+	// 로그인하면 현재 페이지로, => AJAX 쓰면 될텐디... 
 ?>
 </div>

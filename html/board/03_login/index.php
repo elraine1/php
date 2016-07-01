@@ -38,7 +38,6 @@
 		
 			<?php	
 			
-				
 				$board_info = get_all_board_info();
 				
 				printf("<ul>");

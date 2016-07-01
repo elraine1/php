@@ -5,7 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="/style/style1.css">
 	<style type="text/css">
 		table{
-			width:50%;
+			width:80%;
 			align:center;
 			border: 1px solid LightSeaGreen;
 			border-collapse: collapse;

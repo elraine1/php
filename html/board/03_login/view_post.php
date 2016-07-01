@@ -31,22 +31,23 @@
 	</style>
 </head>
 <body>
-
+	<?php		
+		$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
+		$login_bar_path = $_SERVER['DOCUMENT_ROOT'] . '/board/03_login/user/login_header.php';
+		
+		require_once($mylib_path);
+		require_once($login_bar_path);
+		
+		if($_SERVER['REQUEST_METHOD'] == 'GET'){
+			$post_id = $_GET['post_id'];
+		}	
+	?>
+	
 	<h2>글 보기</h2>
 	<hr>
 	<div class="content">	
 		<?php
-		
-			$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
-			$login_bar_path = $_SERVER['DOCUMENT_ROOT'] . '/board/03_login/user/login_header.php';
-			
-			require_once($mylib_path);
-			require_once($login_bar_path);
-			
-			if($_SERVER['REQUEST_METHOD'] == 'GET'){
-				$post_id = $_GET['post_id'];
-			}	
-			
+
 			$board_info = get_all_board_info();
 			$post = get_post($post_id);
 			update_hits($post_id);
@@ -67,7 +68,6 @@
 			printf("<a href='./post_write_form.php?board_id=%d'><button>글작성</button></a>", $post['board_id']);
 			printf("<a href='./post_modify_form.php?post_id=%d'><button>글수정</button></a>", $post['post_id']);
 			printf("<a href='./post_delete_process.php?post_id=%d'><button>글삭제</button></a><br>", $post['post_id']);
-
 			
 			$comments = get_comments($post_id);
 		?>	

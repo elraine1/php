@@ -7,7 +7,6 @@
 		table{
 			width:50%;
 			align:center;
-			border: 1px solid LightSeaGreen;
 			border-collapse: collapse;
 			margin: 10px;
 		}
@@ -28,6 +27,7 @@
 		a{
 			text-decoration: none;
 		}
+		
 	</style>
 </head>
 <body>
@@ -57,8 +57,8 @@
 			printf("<tr><td height='10' colspan='2'></td></tr>");
 			printf("<tr><th colspan='2' align='center'>내 용</th></tr>");
 			printf("<tr><td id='td_content' colspan='2' align='center'><textarea name='content' rows='12' cols='135'>%s</textarea>", $post['content']);
-			printf("<br><input type='submit' value='확인'></td></tr>");
-			printf("</table>");
+			printf("<tr><td colspan='2' align='center'><input type='submit' value='확인'></td></tr>");
+			printf("</table>");	
 			printf("</form>");
 			
 			printf("<br><a href='./post_write_form.php'><button>글쓰기</button></a>");
