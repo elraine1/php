@@ -3,10 +3,10 @@
 require_once('session.php');
  
 start_session();
-try_to_logout();
-destroy_session();
+$request_uri = $_SESSION['request_uri'];
 
-$header_path = $_SERVER["DOCUMENT_ROOT"].$_SERVER["REQUEST_URI"];
-header("Location: " . $header_path);
+try_to_logout();
+destroy_session();			
+header("Location: " . $request_uri);
 //header("Location: /index.php");
 //header($header_path);

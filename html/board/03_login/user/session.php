@@ -6,16 +6,14 @@ class UserInfo{
 	
 	public $user_id; 
 	public $username;
-	public $password;
 	public $nickname;
 	public $email;
 	public $join_date;
 	
 	// 생성자
-	public function __construct($user_id, $username, $password, $nickname, $email, $join_date) {
+	public function __construct($user_id, $username, $nickname, $email, $join_date) {
 		$this->user_id = $user_id;
 		$this->username = $username;
-		$this->password = $password;
 		$this->nickname = $nickname;
 		$this->email = $email;
 		$this->join_date = $join_date;
@@ -66,7 +64,6 @@ function try_to_login($username, $password) {
 		$_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 		$_SESSION['user_id'] = $userinfo->user_id;	
 		$_SESSION['username'] = $userinfo->username;
-		$_SESSION['password'] = $userinfo->password;
 		$_SESSION['nickname'] = $userinfo->nickname;
 		$_SESSION['email'] = $userinfo->email;
 		$_SESSION['join_date'] = $userinfo->join_date;
@@ -89,7 +86,7 @@ function get_user_info($username, $password){
 	$result = mysqli_stmt_get_result($stmt);
 	$row = mysqli_fetch_assoc($result);
 	
-	$userinfo = new UserInfo($row['user_id'], $username, $password, $row['nickname'], $row['email'], $row['join_date']);
+	$userinfo = new UserInfo($row['user_id'], $username, $row['nickname'], $row['email'], $row['join_date']);
 
 	mysqli_free_result($result);
 	mysqli_close($conn);	

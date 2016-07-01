@@ -20,6 +20,7 @@
 //	echo $_SERVER["REQUEST_URI"];
 
 	$_SESSION['request_uri'] = $_SERVER["REQUEST_URI"];
+	//echo $_SESSION['request_uri'];
 	
 	if(isset($_SESSION['login_status']) && ($_SESSION['login_status'] == true)){ 
 		printf("<div id='logon'>");

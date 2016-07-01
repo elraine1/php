@@ -22,7 +22,6 @@ if (isset($_POST['username'], $_POST['password'])) {
 		mysqli_stmt_bind_param($stmt, "ssss", $username, password_hash($password, PASSWORD_DEFAULT), $nickname, $email);
 		mysqli_stmt_execute($stmt);
 		
-		printf("<script>alert('성공적으로 가입되었습니다.!');</script>");
 		header('Location: ../index.php');
 	}
 	mysqli_free_result($result);

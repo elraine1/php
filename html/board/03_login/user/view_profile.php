@@ -39,9 +39,7 @@
 		printf("</table>");
 		printf("<button>내가 작성한 글</button><button>회원정보 변경</button>");
 	}
-	else{
-		echo "tttt";
-	}
+	
 	?>		
 		
 
