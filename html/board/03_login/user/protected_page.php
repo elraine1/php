@@ -7,9 +7,10 @@
 <body>
 <div class="content">
 <?php
-	require_once 'session.php';
+	require_once ('session.php');
 	start_session();
 	if (check_login()) {
+//		echo $_SESSION['login_status'] . " / " . $_SESSION['username'] . " / " . $_SESSION['password'];
 //		echo "<h1>로그인 성공!</h1>";
 		header("Location: ../index.php");
 

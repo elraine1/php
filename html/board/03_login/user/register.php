@@ -11,16 +11,18 @@ if (isset($_POST['username'], $_POST['password'])) {
 	$email = $_POST['email'];
 	
 	$conn = get_sqlserver_conn();
-	$stmt = mysqli_prepare($conn, "SELECT hash FROM user_account WHERE username = ?");
+	$stmt = mysqli_prepare($conn, "SELECT hash FROM user_account WHERE username = ?"); 	
 	mysqli_stmt_bind_param($stmt, "s", $username);
 	mysqli_stmt_execute($stmt);
 	$result = mysqli_stmt_get_result($stmt);
-	if (mysqli_num_rows($result) != 0) { // 이미 등록된 아이디
+	if (mysqli_num_rows($result) != 0) { // 이미 등록된 아이디	// 닉네임, 이메일 중복처리 필요.
 		header('Location: error.php?error_code=4');
 	} else {
 		$stmt = mysqli_prepare($conn, "INSERT INTO user_account(username, hash, nickname, email) VALUES (?, ?, ?, ?)");	
 		mysqli_stmt_bind_param($stmt, "ssss", $username, password_hash($password, PASSWORD_DEFAULT), $nickname, $email);
 		mysqli_stmt_execute($stmt);
+		
+		printf("<script>alert('성공적으로 가입되었습니다.!');</script>");
 		header('Location: ../index.php');
 	}
 	mysqli_free_result($result);

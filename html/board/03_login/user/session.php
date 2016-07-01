@@ -2,6 +2,27 @@
 $mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
 require_once($mylib_path);
 
+class UserInfo{
+	
+	public $user_id; 
+	public $username;
+	public $password;
+	public $nickname;
+	public $email;
+	public $join_date;
+	
+	// 생성자
+	public function __construct($user_id, $username, $password, $nickname, $email, $join_date) {
+		$this->user_id = $user_id;
+		$this->username = $username;
+		$this->password = $password;
+		$this->nickname = $nickname;
+		$this->email = $email;
+		$this->join_date = $join_date;
+	}
+	
+}
+
 // 하나의 페이지에서 한 번만 호출되어야 한다.
 function start_session() {
     $secure = false; // https
@@ -36,17 +57,47 @@ function destroy_session() {
 
  // start_session 호출된 후에 사용되어야 한다
 function try_to_login($username, $password) {
+	
 	if (check_user_account($username, $password)) {
+		
+		$userinfo = get_user_info($username, $password);
+		
 		$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
 		$_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
-		$_SESSION['username'] = $username;
-		$_SESSION['password'] = $password;
+		$_SESSION['user_id'] = $userinfo->user_id;	
+		$_SESSION['username'] = $userinfo->username;
+		$_SESSION['password'] = $userinfo->password;
+		$_SESSION['nickname'] = $userinfo->nickname;
+		$_SESSION['email'] = $userinfo->email;
+		$_SESSION['join_date'] = $userinfo->join_date;
 		$_SESSION['login_status'] = true;
+		
 		return true;
+		
 	} else {
 		return false;
 	}
 }
+
+// 사용자 정보를 세션에 등록하는 함수.
+function get_user_info($username, $password){
+	
+	$conn = get_sqlserver_conn();
+	$stmt = mysqli_prepare($conn, "SELECT * FROM user_account WHERE username = ?");
+	mysqli_stmt_bind_param($stmt, "s", $username);
+	mysqli_stmt_execute($stmt);
+	$result = mysqli_stmt_get_result($stmt);
+	$row = mysqli_fetch_assoc($result);
+	
+	$userinfo = new UserInfo($row['user_id'], $username, $password, $row['nickname'], $row['email'], $row['join_date']);
+
+	mysqli_free_result($result);
+	mysqli_close($conn);	
+
+	return $userinfo;
+}
+
+
 
 function check_user_account($username, $password) {
 	
@@ -60,6 +111,7 @@ function check_user_account($username, $password) {
 	} else {
 		$row = mysqli_fetch_assoc($result);
 		$hash = $row["hash"];
+
 		return password_verify($password, $hash);
 	}
 	mysqli_free_result($result);
@@ -68,6 +120,7 @@ function check_user_account($username, $password) {
 
 // start_session 호출된 후에 사용되어야 한다
 function check_login() {
+	echo "check_login";
 	return isset($_SESSION['ip'], $_SESSION['user_agent'], $_SESSION['login_status']) && 
 		// 세션 탈취를 방어. 세션이 생성될 때의 ip, 브라우저와 현재 상태가 동일한 지 확인.
 		$_SESSION['ip'] == $_SERVER['REMOTE_ADDR'] && 

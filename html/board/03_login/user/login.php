@@ -13,7 +13,7 @@ if (isset($_POST['username'], $_POST['password'])) {
     $username = $_POST['username'];
     $password = $_POST['password']; 
 	
-	echo $username . " & " . $password;
+//	echo $username . " & " . $password;
     if (try_to_login($username, $password) == true) {
 		header('Location: protected_page.php');
     } else {

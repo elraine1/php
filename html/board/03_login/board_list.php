@@ -32,21 +32,24 @@
 </head>
 
 <?php
+	
+	$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
+	$login_bar_path = $_SERVER['DOCUMENT_ROOT'] . '/board/03_login/user/login_header.php';
+	
+	require_once($mylib_path);
+	require_once($login_bar_path);
+	
 	if($_SERVER['REQUEST_METHOD'] == 'GET'){
 		$board_id = $_GET['board_id'];
 		$page = $_GET['page'];
 	}		
-	
-	$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
-	require_once($mylib_path);
-	
 ?>
 
 <body>
 	<div class="content">
 	<h2>글 목록</h2>
 	<?php 
-		
+
 		//// 페이징.
 		$page_size = 20; 
 		$post_id_start = ($page - 1) * $page_size;

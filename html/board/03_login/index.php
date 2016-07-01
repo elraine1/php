@@ -5,27 +5,7 @@
 	#wrap{
 		margin: 0 auto;
 	}
-	table{
-		width: 60%;
-		align: center;
-		border: 1px solid LightSeaGreen;
-		border-collapse: collapse;
-	}
-	th{
-		background-color: LightSkyBlue ;
-		border: 1px solid LightSeaGreen;
-	}
-	td, tr{
-		border: 1px solid LightSeaGreen;
-		border-collapse: collapse;
-	}
-	#td_num{
-		text-align: center;
-	}
-	a{
-		text-decoration: none;
-	}
-	
+
 	#div_table{
 		margin: 0 auto;
 		width: 100%;
@@ -36,48 +16,28 @@
 		text-align: right;
 		margin: 0;
 	}
-	
-	#login_bar{
-		width: 100%;
-		height: 22px;
-		margin: 0 auto;
-		padding: 5px 5px 10px 5px;
-		background-color: FireBrick;
+
+	a{
+		text-decoration: none;
 	}
-	
 	
 </style>
 <body>
 	<div id="wrap">
 		
-		<div id="login_bar">
-		<?php if(isset($_SESSION['login_status']) && ($_SESSION['login_status'] == true)){ ?>
-
-			<div id="logon">
-				<a href="/board/03_login/user/view_profile.php"><button>USER PROFILE</button></a>
-				<a href="/board/03_login/user/logout.php"><button>LOGOUT</button></a>
-			</div>
-
-		<?php }else { ?>
-		
-			<div id="not_login">
-				<form action="/board/03_login/user/login.php" method="post">
-					USERNAME: <input type="text" name="username"/>
-					PASSWORD: <input type="password" name="password"/>
-					<input type="submit" value="OK"/> 
-					<a href="/board/03_login/user/register_page.php">Sign Up</a>
-				</form>
-			</div>
+		<?php 
+			$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
+			$login_bar_path = $_SERVER['DOCUMENT_ROOT'] . '/board/03_login/user/login_header.php';
 			
-		<?php }	?>
-		</div>
+			require_once($mylib_path);
+			require_once($login_bar_path);
+		?>
 		
 		<h2>게시판 연습</h2>
 		<div id="div_table">
 		
 			<?php	
-				$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
-				require_once($mylib_path);
+			
 				
 				$board_info = get_all_board_info();
 				
