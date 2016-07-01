@@ -5,7 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="/style/style1.css">
 	<style type="text/css">
 		table{
-			width:50%;
+			width:80%;
 			align:center;
 			border: 1px solid LightSeaGreen;
 			border-collapse: collapse;
@@ -61,13 +61,16 @@
 			printf("<tr><th>제목</th><td>%s</td></tr>", $post['title']);
 			printf("<tr><td height='10' colspan='2'></td></tr>");
 			printf("<tr><th colspan='2' align='center'>내 용</th></tr>");
-			printf("<tr><td id='td_content' colspan='2'><textarea disabled rows='12' cols='135'>%s</textarea></td></tr>", $post['content']);
+			printf("<tr><td id='td_content' colspan='2'><textarea disabled rows='12' cols='150'>%s</textarea></td></tr>", $post['content']);
 			printf("</table>");
 			
 			printf("<br><a href='./board_list.php?board_id=%d&page=%d'><button>글목록으로</button></a>", $post['board_id'], get_page_by_post_id($post['board_id'], $post['post_id']));
 			printf("<a href='./post_write_form.php?board_id=%d'><button>글작성</button></a>", $post['board_id']);
-			printf("<a href='./post_modify_form.php?post_id=%d'><button>글수정</button></a>", $post['post_id']);
-			printf("<a href='./post_delete_process.php?post_id=%d'><button>글삭제</button></a><br>", $post['post_id']);
+			
+			if(($_SESSION['login_status']===true) && ($_SESSION['user_id'] === $post['writer'])){
+				printf("<a href='./post_modify_form.php?post_id=%d'><button>글수정</button></a>", $post['post_id']);
+				printf("<a href='./post_delete_process.php?post_id=%d'><button>글삭제</button></a><br>", $post['post_id']);
+			}
 			
 			$comments = get_comments($post_id);
 		?>	
@@ -95,7 +98,15 @@
 				<?php printf("<input type='hidden' name='post_id' value='%d'>", $post_id); ?>
 				<table width="800px">
 					<tr>
-						<td class="user_id" align="center" width="60px">WRITER:<br><input type="text" name="writer" size="14"></td>
+						<td class="user_id" align="center" width="60px">WRITER:<br>
+							<?php 
+								if($_SESSION['login_status'] === true){
+									printf("<input type='text' name='writer' size='14' value='%s' readonly>", $_SESSION['nickname']);
+								}else{
+									printf("<input type='text' name='writer' size='14'>");
+								}
+							?>
+						</td>
 						<td class="comment" align="center" width="200px"><textarea name="comment" rows="4" cols="100"></textarea></td>
 						<td><input type="submit" value="확인" align="center"></td>
 					</tr>						
