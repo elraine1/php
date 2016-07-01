@@ -12,10 +12,10 @@
 
 <?php 
 	$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
+	$login_bar_path = $_SERVER['DOCUMENT_ROOT'] . '/board/03_login/user/login_header.php';
 	
 	require_once($mylib_path);
-	require_once("session.php");
-	start_session();
+	require_once($login_bar_path);
 	
 	if($_SERVER['REQUEST_METHOD'] == 'GET'){
 		$username = $_GET['username'];
