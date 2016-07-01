@@ -120,7 +120,7 @@ function check_user_account($username, $password) {
 
 // start_session 호출된 후에 사용되어야 한다
 function check_login() {
-	echo "check_login";
+	
 	return isset($_SESSION['ip'], $_SESSION['user_agent'], $_SESSION['login_status']) && 
 		// 세션 탈취를 방어. 세션이 생성될 때의 ip, 브라우저와 현재 상태가 동일한 지 확인.
 		$_SESSION['ip'] == $_SERVER['REMOTE_ADDR'] && 
