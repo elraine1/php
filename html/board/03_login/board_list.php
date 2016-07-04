@@ -5,7 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="/style/style1.css">
 	<style type="text/css">
 		table{
-			width:80%;
+			width:60%;
 			align:center;
 			border: 1px solid LightSeaGreen;
 			border-collapse: collapse;
@@ -115,8 +115,9 @@
 			printf("[<a href='./board_list.php?board_id=%d&page=%d'>다음▶</a>]", $board_id, $block_end);
 		}
 		
-		printf("<br><br><a href='./post_write_form.php?board_id=%d'><button>글쓰기</button></a><br>", $board_id);
-			
+		if(isset($_SESSION['login_status']) && ($_SESSION['login_status'] === true)){
+			printf("<br><br><a href='./post_write_form.php?board_id=%d'><button>글쓰기</button></a><br>", $board_id);
+		}
 	?>
 		<hr>
 		<a href="./index.php"><button>홈으로</button></a> <br>

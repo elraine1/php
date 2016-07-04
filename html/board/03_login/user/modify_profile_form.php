@@ -16,11 +16,7 @@
 	
 	require_once($mylib_path);
 	require_once($login_bar_path);
-	
-	if($_SERVER['REQUEST_METHOD'] == 'GET'){
-		$username = $_GET['username'];
-	}
-	
+
 ?>
 
 
@@ -34,12 +30,13 @@
 		printf("<table>");
 		printf("<tr><th>회원번호</th><td>%d</td></tr>", $_SESSION['user_id']);
 		printf("<tr><th>아이디</th><td>%s</td></tr>", $_SESSION['username']);
-		printf("<tr><th>닉네임</th><td>%s</td></tr>", $_SESSION['nickname']);		
-		printf("<tr><th>이메일</th><td>%s</td></tr>", $_SESSION['email']);
+		printf("<tr><th>비밀번호</th><td><input type='password' name='password'></td></tr>");
+		printf("<tr><th>비밀번호 재입력</th><td><input type='password' name='password2'></td></tr>");
+		printf("<tr><th>닉네임</th><td><input type='text' name='nickname' value='%s'></td></tr>", $_SESSION['nickname']);
+		printf("<tr><th>이메일</th><td><input type='text' name='email' value='%s'></td></tr>", $_SESSION['email']);
 		printf("<tr><th>가입일</th><td>%s</td></tr>", $_SESSION['join_date']);
 		printf("</table>");
-		printf("<button>내가 작성한 글</button>");
-		printf("<a href='modify_profile_form.php'><button>회원정보 변경</button></a>");
+		printf("<a href='#'><button>회원정보 수정</button></a>");
 	}
 	
 	?>		

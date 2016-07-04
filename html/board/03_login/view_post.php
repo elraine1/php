@@ -5,7 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="/style/style1.css">
 	<style type="text/css">
 		table{
-			width:80%;
+			width:60%;
 			align:center;
 			border: 1px solid LightSeaGreen;
 			border-collapse: collapse;
@@ -67,7 +67,7 @@
 			printf("<br><a href='./board_list.php?board_id=%d&page=%d'><button>글목록으로</button></a>", $post['board_id'], get_page_by_post_id($post['board_id'], $post['post_id']));
 			printf("<a href='./post_write_form.php?board_id=%d'><button>글작성</button></a>", $post['board_id']);
 			
-			if(($_SESSION['login_status']===true) && ($_SESSION['user_id'] === $post['writer'])){
+			if(isset($_SESSION['login_status']) && ($_SESSION['login_status']===true) && ($_SESSION['user_id'] === $post['writer'])){
 				printf("<a href='./post_modify_form.php?post_id=%d'><button>글수정</button></a>", $post['post_id']);
 				printf("<a href='./post_delete_process.php?post_id=%d'><button>글삭제</button></a><br>", $post['post_id']);
 			}
@@ -100,7 +100,7 @@
 					<tr>
 						<td class="user_id" align="center" width="60px">WRITER:<br>
 							<?php 
-								if($_SESSION['login_status'] === true){
+								if(isset($_SESSION['login_status']) && $_SESSION['login_status'] === true){
 									printf("<input type='text' name='writer' size='14' value='%s' readonly>", $_SESSION['nickname']);
 								}else{
 									printf("<input type='text' name='writer' size='14'>");
