@@ -2,7 +2,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="/style/style1.css">
+	<link rel="stylesheet" type="text/css" href="/php_style/style1.css">
 	<style type="text/css">
 		table{
 			width:60%;

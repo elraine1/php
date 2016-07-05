@@ -2,7 +2,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="/style/style1.css">
+	<link rel="stylesheet" type="text/css" href="/php_style/style1.css">
 	<style type="text/css">
 		table{
 			width:50%;
@@ -48,6 +48,8 @@
 	<div class="content">
 	<?php 
 		printf("<h1>%s 게시판</h1>", $board_info[$board_id]);
+		
+		if(isset($_SESSION['login_status'])&& ($_SESSION['login_status'] === true)){
 	?>
 		<hr>
 		<form action="post_write_process.php" method="post">
@@ -55,7 +57,7 @@
 			<table>
 				<tr>
 					<th><h5>작성자</h5></th>
-					<td><input type="text" class="input_text" name="writer"></td>
+					<td><input type="text" class="input_text" name="writer" value="<?php echo $_SESSION['username']?>" readonly></td>
 				</tr>
 				<tr>
 					<th><h5>제목</h5></th>
@@ -74,6 +76,7 @@
 		</form>
 		
 	<?php
+		}
 		
 		printf("<br>");
 		printf("<a href='./board_list.php?board_id=%d&page=1'><button>글목록</button></a>", $board_id);

@@ -13,7 +13,7 @@
 	.wrap {
 		background-color: LightSalmon;
 		margin: 0 auto;
-		height: 1000px;
+		height: 1200px;
 		padding: 20px 50px 50px 50px;
 	}
 	#div_board {
@@ -79,6 +79,18 @@
 			<a href="/excercise/diff/diff_index.php">DIFF</a><br>
 			
 		</div>
+		<hr>
+		
+		<!--
+		<div id="div_board">
+			<h3>Project</h3>
+			<?php 
+				// $sturec_path = $_SERVER['DOCUMENT_ROOT'] . '/../../sturec/index.php';
+				// printf("<a href='%s'>1차. 학생기록 관리(Sturec)</a><br>", $sturec_path);
+			?>
+		</div>
+		-->
+		
 		<hr>
 	</div>
 </body>

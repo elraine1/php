@@ -2,7 +2,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="/style/style1.css">
+	<link rel="stylesheet" type="text/css" href="/php_style/style1.css">
 	<style type="text/css">
 		table{
 			width:60%;
@@ -85,7 +85,7 @@
 				printf("<table>");
 				
 				for($i=0; $i < count($comments); $i++){
-					printf("<tr><td class='user_id' height='20' width='130'> %s </td><td class='comment' width='600'> %s </td><td class='date'> %s </td></tr>", 
+					printf("<tr><td class='user_id' height='20' width='130'> %s </td><td class='comment' width='720'> %s </td><td class='date'> %s </td><td><button>삭제</button></td></tr>", 
 							$comments[$i]['writer'], $comments[$i]['comment'], convert_time_string($comments[$i]['w_date']));
 				}
 				printf("</table>");
