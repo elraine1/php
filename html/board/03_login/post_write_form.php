@@ -57,7 +57,7 @@
 			<table>
 				<tr>
 					<th><h5>작성자</h5></th>
-					<td><input type="text" class="input_text" name="writer" value="<?php echo $_SESSION['username']?>" readonly></td>
+					<td><input type="text" class="input_text" name="writer" value="<?php echo $_SESSION['nickname']?>" readonly></td>
 				</tr>
 				<tr>
 					<th><h5>제목</h5></th>

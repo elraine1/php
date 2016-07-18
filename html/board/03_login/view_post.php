@@ -34,13 +34,16 @@
 	<?php		
 		$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
 		$login_bar_path = $_SERVER['DOCUMENT_ROOT'] . '/board/03_login/user/login_header.php';
-		
+	
 		require_once($mylib_path);
 		require_once($login_bar_path);
 		
 		if($_SERVER['REQUEST_METHOD'] == 'GET'){
 			$post_id = $_GET['post_id'];
 		}	
+		
+		
+		
 	?>
 	
 	<h2>글 보기</h2>
@@ -67,9 +70,9 @@
 			printf("<br><a href='./board_list.php?board_id=%d&page=%d'><button>글목록으로</button></a>", $post['board_id'], get_page_by_post_id($post['board_id'], $post['post_id']));
 			printf("<a href='./post_write_form.php?board_id=%d'><button>글작성</button></a>", $post['board_id']);
 			
-			if(isset($_SESSION['login_status']) && ($_SESSION['login_status']===true) && ($_SESSION['user_id'] === $post['writer'])){
+			if(isset($_SESSION['login_status']) && ($_SESSION['login_status']===true) && ($_SESSION['nickname'] == $post['writer'])){
 				printf("<a href='./post_modify_form.php?post_id=%d'><button>글수정</button></a>", $post['post_id']);
-				printf("<a href='./post_delete_process.php?post_id=%d'><button>글삭제</button></a><br>", $post['post_id']);
+				printf("<a href='./post_delete_process.php?board_id=%d&post_id=%d'><button>글삭제</button></a><br>", $post['board_id'], $post['post_id']);
 			}
 			
 			$comments = get_comments($post_id);
@@ -85,9 +88,17 @@
 				printf("<table>");
 				
 				for($i=0; $i < count($comments); $i++){
-					printf("<tr><td class='user_id' height='20' width='130'> %s </td><td class='comment' width='720'> %s </td><td class='date'> %s </td><td><button>삭제</button></td></tr>", 
-							$comments[$i]['writer'], $comments[$i]['comment'], convert_time_string($comments[$i]['w_date']));
+					printf("<tr>");
+					printf("<td class='user_id' height='20' width='130'> %s </td>", $comments[$i]['writer']);
+					printf("<td class='comment' width='720'> %s </td>", $comments[$i]['comment']);
+					printf("<td class='date'> %s </td>",convert_time_string($comments[$i]['w_date']));
+					
+					if($_SESSION['nickname'] == $comments[$i]['writer']){
+						printf("<td><a href='./comment_delete_process.php?comment_id=%d'><button>삭제</button></a></td>", $comments[$i]['comment_id']);
+					}
+					printf("</tr>");
 				}
+				
 				printf("</table>");
 				printf("</div>");
 			} 
@@ -108,7 +119,9 @@
 							?>
 						</td>
 						<td class="comment" align="center" width="200px"><textarea name="comment" rows="4" cols="100"></textarea></td>
-						<td><input type="submit" value="확인" align="center"></td>
+						<td>
+							<input type="submit" value="확인" align="center"><br>
+						</td>
 					</tr>						
 				</table>
 			</form>	

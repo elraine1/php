@@ -2,6 +2,8 @@
 <?php 	
 	$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
 	require_once($mylib_path);	
+	require_once("./user/session.php");
+	start_session();
 				
 	if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		$post['board_id'] = $_POST['board_id'];
@@ -18,9 +20,9 @@
 	}
 	
 	// 게시물 작성.
-	echo "<br>";
-	post_upload($post);
+	post_upload($post);	
 	
-	printf("<br><a href='./board_list.php?board_id=%d&page=1'><button>글목록</button></a>", $post['board_id']);
-	printf("<a href='./index.php'><button>홈으로</button></a><br>");
+	$return_path = sprintf("./board_list.php?board_id=%d&page=1", $post['board_id']);
+	header("Location: " . $return_path);
+	
 ?>

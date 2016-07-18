@@ -180,7 +180,7 @@
 	function get_comments($post_id){		
 		$i=0;
 		$comments = array();
-		$select_query = sprintf("SELECT writer, comment, written_date FROM comment where post_id = %d", $post_id);				
+		$select_query = sprintf("SELECT comment_id, writer, comment, written_date FROM comment where post_id = %d", $post_id);				
 
 		$conn = get_sqlserver_conn();
 		$result = mysqli_query($conn, $select_query);
@@ -189,6 +189,7 @@
 		}
 
 		while($comment = mysqli_fetch_assoc($result)){
+			$comments[$i]['comment_id'] = $comment['comment_id'];
 			$comments[$i]['writer'] = $comment['writer'];
 			$comments[$i]['comment'] = $comment['comment'];
 			$comments[$i]['w_date'] = $comment['written_date'];
