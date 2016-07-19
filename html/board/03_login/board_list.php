@@ -77,13 +77,13 @@
 		
 		for($i=0; $i < count($posts); $i++){
 			printf("<tr>");
-			printf("<td id='td_num' align='center'><a href='./view_post.php?post_id=%d'>%d</a></td>", $posts[$i]['post_id'], $posts[$i]['post_id']);
+			printf("<td id='td_num' align='center'><a href='./view_post.php?board_id=%d&post_id=%d'>%d</a></td>", $board_id, $posts[$i]['post_id'], $posts[$i]['post_id']);
 			printf("<td align='center'>%s</td>", $posts[$i]['writer']);
 			
 			if($posts[$i]['comment_count'] > 0){
-				printf("<td align='left'><a href='./view_post.php?post_id=%d'> %s <b>[%d]</b></td>", $posts[$i]['post_id'],$posts[$i]['title'], $posts[$i]['comment_count']);
+				printf("<td align='left'><a href='./view_post.php?board_id=%d&post_id=%d'> %s <b>[%d]</b></td>", $board_id, $posts[$i]['post_id'],$posts[$i]['title'], $posts[$i]['comment_count']);
 			}else{
-				printf("<td align='left'><a href='./view_post.php?post_id=%d'> %s </td>", $posts[$i]['post_id'],$posts[$i]['title']);
+				printf("<td align='left'><a href='./view_post.php?board_id=%d&post_id=%d'> %s </td>", $board_id, $posts[$i]['post_id'],$posts[$i]['title']);
 			}
 			
 			printf("<td align='center'>%d</td>", $posts[$i]['hits']);
@@ -92,6 +92,16 @@
 		}
 		printf("</table>");	
 
+		printf("<form action='#' method='POST'>");
+		printf("<select name='category'>");
+		printf("<option value='title'>제목</option>");
+		printf("<option value='content'>내용</option>");
+		printf("<option value='all'>전체</option>");
+		printf("</select>");
+		printf(" <input type='text' name='search_word'> ");
+		printf(" <input type='submit' value='검색' disabled> ");
+		printf("</form>");
+		
 		// Block Paging
 		// 이전 block, 다음 block 이 없는 경우 <a> 태그 사용 안 함. 
 		if($block_start == 1){

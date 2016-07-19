@@ -40,6 +40,7 @@
 		
 		if($_SERVER['REQUEST_METHOD'] == 'GET'){
 			$post_id = $_GET['post_id'];
+			$board_id = $_GET['board_id'];
 		}	
 		
 		

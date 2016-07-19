@@ -32,12 +32,6 @@
 </head>
 <body>
 	
-	<?php 
-		if(false){
-			die("");
-		}
-		
-	?>
 
 	<h1>POST 수정하기</h1>
 	<div class="content">	

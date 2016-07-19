@@ -2,6 +2,9 @@
 <?php 	
 	$mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
 	require_once($mylib_path);
+	
+	require_once('./user/session.php');
+	start_session();
 		
 	if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		$post['post_id'] = $_POST['post_id'];
@@ -18,8 +21,5 @@
 	}
 	
 	modify_post($post);
-
-	printf("<br><a href='./view_post.php?post_id=%s'><button>수정된 글 확인</button></a>", $post['post_id']);
-	printf("<a href='./index.php'><button>홈으로</button></a><br>");
-	
+	header("Location: " . $_SESSION['request_uri']);
 ?>
