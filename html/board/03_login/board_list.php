@@ -42,6 +42,11 @@
 	if($_SERVER['REQUEST_METHOD'] == 'GET'){
 		$board_id = $_GET['board_id'];
 		$page = $_GET['page'];
+		
+		if(isset($_GET['search_word'], $_GET['category'])){
+			$search_word = $_GET['search_word'];
+			$category = $_GET['category'];
+		}
 	}		
 ?>
 
@@ -50,15 +55,23 @@
 	<h2>글 목록</h2>
 	<?php 
 
+		$board_info = get_all_board_info();	// 게시판 id, 게시판 이름을 가져옴.
+		
 		//// 페이징.
 		$page_size = 20; 
 		$post_id_start = ($page - 1) * $page_size;
 		$post_id_end = $page * $page_size; 
 		
-		$total_post = get_total_post($board_id);
+		$block_size = 10;
+		
+		if(isset($_GET['search_word'], $_GET['category'])){
+			$total_post = get_total_post_by_search($board_id, $category, $search_word);
+		}else {
+			$total_post = get_total_post($board_id);
+		}
+		
 		$total_page = ($total_post - 1) / $page_size + 1;
 		
-		$block_size = 10;
 		$curr_block = intval(($page - 1) / $block_size) + 1;
 		$block_start = ($curr_block - 1) * $block_size + 1;
 		$block_end = $block_start + $block_size;
@@ -67,11 +80,28 @@
 			$block_end = $total_page;
 		}
 		
-		$board_info = get_all_board_info();
-		$posts = get_posts($board_id, $post_id_start, $post_id_end);
-
+		if(isset($_GET['search_word'], $_GET['category'])){
+			$posts = get_posts_by_search($board_id, $category, $search_word, $post_id_start, $post_id_end);
+		}else {
+			$posts = get_posts($board_id, $post_id_start, $post_id_end);	/// 게시물들을 가져옴.
+		}
+		
+		
+	
 		printf("<hr>");
 		printf("<h3>%s 게시판</h3>", $board_info[$board_id]);
+		
+		if(isset($_GET['search_word'])){
+			switch($category){
+				case "title": $cate = "제목"; break;
+				case "content": $cate = "내용"; break;
+				case "writer": $cate = "작성자"; break;
+			}
+			
+			printf("카테고리 <b>[%s]</b>에서 검색어 <b>[%s]</b>로 검색한 결과, 총 <b>%d</b>건의 게시물이 검색되었습니다. ", 
+			$cate, $search_word, count($posts));
+		}
+		
 		printf("<table>");
 		printf("<tr> <th width='40'>글번호</th> <th width='80'>작성자</th> <th width='200'>제목</th> <th width='40'>조회수</th> <th width='90'>작성일시</th></tr>");
 		
@@ -92,14 +122,16 @@
 		}
 		printf("</table>");	
 
-		printf("<form action='#' method='POST'>");
+		printf("<form action='board_list.php' method='GET'>");
+		printf("<input type='hidden' name='board_id' value='%d'>", $board_id);
+		printf("<input type='hidden' name='page' value='%d'>", $page);
 		printf("<select name='category'>");
 		printf("<option value='title'>제목</option>");
 		printf("<option value='content'>내용</option>");
-		printf("<option value='all'>전체</option>");
+		printf("<option value='writer'>작성자</option>");
 		printf("</select>");
-		printf(" <input type='text' name='search_word'> ");
-		printf(" <input type='submit' value='검색' disabled> ");
+		printf("<input type='text' name='search_word'> ");
+		printf("<input type='submit' value='검색'> ");
 		printf("</form>");
 		
 		// Block Paging

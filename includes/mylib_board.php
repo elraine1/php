@@ -62,6 +62,40 @@
 		
 		return $posts;
 	}
+	
+	// 게시판 ID(board_id)에 해당하는 모든 게시물을 출력해주는 함수.
+	function get_posts_by_search($board_id, $category, $search_word, $start, $end){
+
+		$select_query = sprintf("  SELECT *
+									FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
+											FROM (SELECT @ROWNUM := 0) as R, post	
+											WHERE board_id = %d and %s LIKE '%%%s%%'
+											ORDER BY post_id desc) as post
+									WHERE %d < post.ROWNUM and post.ROWNUM < %d
+									", $board_id, $category, $search_word, $start, $end);
+		
+		$i=0;
+		$posts = array();
+	
+		$conn = get_sqlserver_conn();
+		$result = mysqli_query($conn, $select_query);
+		while($post = mysqli_fetch_assoc($result)){
+			$posts[$i]['post_id'] = $post['post_id'];
+			$posts[$i]['writer'] = $post['writer'];
+			$posts[$i]['title'] = $post['title'];
+			$posts[$i]['content'] = $post['content'];
+			$posts[$i]['hits'] = $post['hits'];
+			$posts[$i]['last_update'] = $post['last_update'];
+			$posts[$i]['comment_count'] = get_count_comment($post['post_id']);
+			$i++;
+		}
+		
+		mysqli_free_result($result);
+		mysqli_close($conn);
+		
+		return $posts;
+	}
+	
 			
 	// post_id를 입력받아 post가 포함된 page 번호를 리턴해주는 함수.
 	function get_page_by_post_id($board_id, $post_id){
@@ -70,7 +104,7 @@
 		$select_query = sprintf("   SELECT ROWNUM
 									FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
 											FROM (SELECT @ROWNUM := 0) as R, post	
-											WHERE board_id = %d
+											WHERE board_id = %d 
 											ORDER BY post_id desc) as post
 									WHERE post_id = %d;
 									", $board_id, $post_id);
@@ -95,6 +129,18 @@
 		mysqli_close($conn);
 		return $count;
 	}
+	
+	function get_total_post_by_search($board_id, $category, $search_word){
+		$conn = get_sqlserver_conn();
+		$select_query = sprintf("SELECT count(*) as count FROM post WHERE board_id = %d and %s LIKE '%%%s%%';", $board_id, $category, $search_word);
+		$result = mysqli_query($conn, $select_query);
+		$tmp = mysqli_fetch_assoc($result);
+		$count = $tmp['count'];
+		mysqli_free_result($result);
+		mysqli_close($conn);
+		return $count;
+	}
+	
 	
 	// post_id 에 딸려있는 댓글의 개수를 알려주는 함수. 
 	function get_count_comment($post_id){
