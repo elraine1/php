@@ -12,7 +12,11 @@
 	if (check_login()) {
 //		echo $_SESSION['login_status'] . " / " . $_SESSION['username'] . " / " . $_SESSION['password'];
 //		echo "<h1>로그인 성공!</h1>";
-		$header_path = sprintf("Location: " . $_SESSION['request_uri']);
+		$uri = '/index.php';
+		if(isset($_SESSION['request_uri'])){
+			$uri = $_SESSION['request_uri'];
+		}
+		$header_path = sprintf("Location: " . $uri);
 		header($header_path);
 
 	} else {

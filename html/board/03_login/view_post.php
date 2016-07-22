@@ -55,6 +55,7 @@
 			$board_info = get_all_board_info();
 			$post = get_post($post_id);
 			update_hits($post_id);
+			printf("<h3><a href='./board_list.php?board_id=%d&page=1'>%s 게시판</a></h3>", $board_id, $board_info[$board_id]);
 		
 			printf("<table>");
 			printf("<tr><th colspan='2'>%s 게시판</th></tr>", $board_info[$post['board_id']]);
