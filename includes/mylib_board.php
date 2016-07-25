@@ -16,10 +16,11 @@
 
 	// 게시판 id와 게시판 이름을 반환하는 함수로, board['id'] = name 형태의 배열로 리턴.
 	function get_all_board_info(){
-		$select_query = sprintf("SELECT * FROM board");
 		
 		$conn = get_sqlserver_conn();
-		$result = mysqli_query($conn, $select_query);
+		$stmt = mysqli_prepare($conn, "SELECT * FROM board");
+		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);
 		while($board = mysqli_fetch_assoc($result)){
 			$board_info[$board['board_id']] = $board['board_name'];
 		}
@@ -33,19 +34,20 @@
 	// 게시판 ID(board_id)에 해당하는 모든 게시물을 출력해주는 함수.
 	function get_posts($board_id, $start, $end){
 
-		$select_query = sprintf("  SELECT *
-									FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
-											FROM (SELECT @ROWNUM := 0) as R, post	
-											WHERE board_id = %d 
-											ORDER BY post_id desc) as post
-									WHERE %d < post.ROWNUM and post.ROWNUM < %d
-									", $board_id, $start, $end);
-		
 		$i=0;
 		$posts = array();
-	
 		$conn = get_sqlserver_conn();
-		$result = mysqli_query($conn, $select_query);
+		$stmt = mysqli_prepare($conn, 
+		"   SELECT *
+			FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
+					FROM (SELECT @ROWNUM := 0) as R, post	
+					WHERE board_id = ?
+					ORDER BY post_id desc) as post
+			WHERE ? < post.ROWNUM and post.ROWNUM < ?");
+		
+		mysqli_stmt_bind_param($stmt, "ddd", $board_id, $start, $end);
+		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);
 		while($post = mysqli_fetch_assoc($result)){
 			$posts[$i]['post_id'] = $post['post_id'];
 			$posts[$i]['writer'] = $post['writer'];
@@ -66,19 +68,36 @@
 	// 게시판 ID(board_id)에 해당하는 모든 게시물을 출력해주는 함수.
 	function get_posts_by_search($board_id, $category, $search_word, $start, $end){
 
-		$select_query = sprintf("  SELECT *
-									FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
-											FROM (SELECT @ROWNUM := 0) as R, post	
-											WHERE board_id = %d and %s LIKE '%%%s%%'
-											ORDER BY post_id desc) as post
-									WHERE %d < post.ROWNUM and post.ROWNUM < %d
-									", $board_id, $category, $search_word, $start, $end);
-		
-		$i=0;
+		$i = 0;
+		$search_word = "%$search_word%";
 		$posts = array();
-	
 		$conn = get_sqlserver_conn();
+
+		/*
+		$stmt = mysqli_prepare($conn, 
+		"   SELECT *
+			FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
+					FROM (SELECT @ROWNUM := 0) as R, post	
+					WHERE board_id = ? and ? LIKE ?
+					ORDER BY post_id desc) as post
+			WHERE ? < post.ROWNUM and post.ROWNUM < ?; ");
+		mysqli_stmt_bind_param($stmt, "dssdd", $board_id, $category, $search_word, $start, $end);
+		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);
+		*/
+		
+		
+		$select_query = sprintf("
+			SELECT *
+			FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
+					FROM (SELECT @ROWNUM := 0) as R, post	
+					WHERE board_id = %d and %s LIKE '%s'
+					ORDER BY post_id desc) as post
+			WHERE %d < post.ROWNUM and post.ROWNUM < %d; ",
+			$board_id, $category, $search_word, $start, $end);
 		$result = mysqli_query($conn, $select_query);
+		
+		
 		while($post = mysqli_fetch_assoc($result)){
 			$posts[$i]['post_id'] = $post['post_id'];
 			$posts[$i]['writer'] = $post['writer'];
@@ -100,15 +119,19 @@
 	// post_id를 입력받아 post가 포함된 page 번호를 리턴해주는 함수.
 	function get_page_by_post_id($board_id, $post_id){
 		$page_size=20;
+
 		$conn = get_sqlserver_conn();
-		$select_query = sprintf("   SELECT ROWNUM
-									FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
-											FROM (SELECT @ROWNUM := 0) as R, post	
-											WHERE board_id = %d 
-											ORDER BY post_id desc) as post
-									WHERE post_id = %d;
-									", $board_id, $post_id);
-		$result = mysqli_query($conn, $select_query);
+		$stmt = mysqli_prepare($conn, 
+		"   SELECT ROWNUM
+			FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, post.* 
+					FROM (SELECT @ROWNUM := 0) as R, post	
+					WHERE board_id = ? 
+					ORDER BY post_id desc) as post
+			WHERE post_id = ?;");
+		mysqli_stmt_bind_param($stmt, "dd", $board_id, $post_id);
+		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);
+		
 		$tmp = mysqli_fetch_assoc($result);
 		$rownum = $tmp['ROWNUM'];
 		$page = intval(($rownum-1) / $page_size) + 1;
@@ -120,9 +143,13 @@
 		
 	// post 개수를 리턴해주는 함수.
 	function get_total_post($board_id){
+		
 		$conn = get_sqlserver_conn();
-		$select_query = sprintf("SELECT count(*) as count FROM post WHERE board_id = %d", $board_id);
-		$result = mysqli_query($conn, $select_query);
+		$stmt = mysqli_prepare($conn, "SELECT count(*) as count FROM post WHERE board_id = ?;");
+		mysqli_stmt_bind_param($stmt, "d", $board_id);
+		mysqli_stmt_execute($stmt);
+		
+		$result = mysqli_stmt_get_result($stmt);
 		$tmp = mysqli_fetch_assoc($result);
 		$count = $tmp['count'];
 		mysqli_free_result($result);
@@ -131,9 +158,21 @@
 	}
 	
 	function get_total_post_by_search($board_id, $category, $search_word){
+		
 		$conn = get_sqlserver_conn();
-		$select_query = sprintf("SELECT count(*) as count FROM post WHERE board_id = %d and %s LIKE '%%%s%%';", $board_id, $category, $search_word);
+		/*
+		$search_word = "%$search_word%";
+		$stmt = mysqli_prepare($conn, "SELECT count(*) as count FROM post WHERE board_id = ? and ? LIKE ?;");
+		mysqli_stmt_bind_param($stmt, "dss", $board_id, $category, $search_word);
+		mysqli_stmt_execute($stmt);
+	
+		$result = mysqli_stmt_get_result($stmt);
+		*/
+		
+		$search_word = "%$search_word%";
+		$select_query = sprintf("SELECT count(*) as count FROM post WHERE board_id = %d and %s LIKE '%s'", $board_id, $category, $search_word);
 		$result = mysqli_query($conn, $select_query);
+		
 		$tmp = mysqli_fetch_assoc($result);
 		$count = $tmp['count'];
 		mysqli_free_result($result);
@@ -144,11 +183,13 @@
 	
 	// post_id 에 딸려있는 댓글의 개수를 알려주는 함수. 
 	function get_count_comment($post_id){
-		$count = 0;
-		$select_query = sprintf("SELECT count(*) as count FROM comment where post_id = %d", $post_id);
-		$conn = get_sqlserver_conn();
 		
-		if(($result = mysqli_query($conn, $select_query)) === false){
+		$count = 0;
+		$conn = get_sqlserver_conn();
+		$stmt = mysqli_prepare($conn, "SELECT count(*) as count FROM comment where post_id = ?");
+		mysqli_stmt_bind_param($stmt, "d", $post_id);
+		mysqli_stmt_execute($stmt);
+		if(($result = mysqli_stmt_get_result($stmt)) === false){
 			die("Error updating record: " . mysqli_error($conn));
 		}
 		$tmp = mysqli_fetch_assoc($result);
@@ -161,8 +202,10 @@
 	function update_hits($post_id){
 		
 		$conn = get_sqlserver_conn();
-		$update_query = sprintf("UPDATE post SET hits=hits+1 WHERE post_id='%d'", $post_id);
-		if(!(mysqli_query($conn, $update_query))){
+		$stmt = mysqli_prepare($conn, "UPDATE post SET hits=hits+1 WHERE post_id = ?;");
+		mysqli_stmt_bind_param($stmt, "d", $post_id);
+		
+		if(!(mysqli_stmt_execute($stmt))){
 			die("Error updating record: " . mysqli_error($conn));
 		}
 		mysqli_close($conn);
@@ -172,9 +215,11 @@
 	function get_post($post_id){
 		
 		$conn = get_sqlserver_conn();
-		$select_query = sprintf("SELECT * FROM post WHERE post_id='%d'", $post_id);
+		$stmt = mysqli_prepare($conn, "SELECT * FROM post WHERE post_id = ?");
+		mysqli_stmt_bind_param($stmt, "d", $post_id);
+		mysqli_stmt_execute($stmt);
 		
-		if (($result = mysqli_query($conn, $select_query)) === false) {
+		if (($result = mysqli_stmt_get_result($stmt)) === false) {
 			die(mysqli_error($conn));
 		}
 		$post = mysqli_fetch_assoc($result);
@@ -186,9 +231,10 @@
 	function post_upload($post){
 				
 		$conn = get_sqlserver_conn();
-		$insert_query = sprintf("INSERT INTO post(writer, title, content, board_id) values('%s', '%s', '%s', '%d')", $post['writer'], $post['title'], $post['content'], $post['board_id']);		
-		
-		if (mysqli_query($conn, $insert_query) === false) {
+		$stmt = mysqli_prepare($conn, "INSERT INTO post(writer, title, content, board_id) 
+										values(?, ?, ?, ?)");				
+		mysqli_stmt_bind_param($stmt, "sssd", $post['writer'], $post['title'], $post['content'], $post['board_id']);
+		if (mysqli_stmt_execute($stmt) === false) {
 			die(mysqli_error($conn));
 		}
 		echo "성공적으로 작성되었습니다. <br>";	
@@ -199,9 +245,11 @@
 	function modify_post($post){
 		
 		$conn = get_sqlserver_conn();
-		$update_query = sprintf("UPDATE post SET writer='%s', title='%s', content='%s', last_update=now() WHERE post_id='%d'", $post['writer'], $post['title'], $post['content'], $post['post_id']);	
+		$stmt = mysqli_prepare($conn, "UPDATE post SET writer = ?, title = ?, content = ?, last_update = now() 
+		WHERE post_id=?");	
+		mysqli_stmt_bind_param($stmt, "sssd", $post['writer'], $post['title'], $post['content'], $post['post_id']); 
 		
-		if (mysqli_query($conn, $update_query) === false) {
+		if (mysqli_stmt_execute($stmt) === false) {
 			die(mysqli_error($conn));
 		}
 		echo "성공적으로 수정되었습니다. <br>";
@@ -213,9 +261,10 @@
 	function comment_upload($comment){
 
 		$conn = get_sqlserver_conn();
-		$insert_query = sprintf("INSERT INTO comment(post_id, writer, comment) VALUES(%d, '%s', '%s')", $comment['post_id'], $comment['writer'], $comment['comment']);
-			
-		if (mysqli_query($conn, $insert_query) === false) {
+		$stmt = mysqli_prepare($conn, "INSERT INTO comment(post_id, writer, comment) VALUES(?, ?, ?)");
+		mysqli_stmt_bind_param($stmt, "dss", $comment['post_id'], $comment['writer'], $comment['comment']);	
+		
+		if (mysqli_stmt_execute($stmt) === false) {
 			die(mysqli_error($conn));
 		}
 		printf("댓글 작성 완료! <br><br>");	
@@ -224,12 +273,17 @@
 	
 	// 해당 게시글의 모든 댓글을 가져오는 함수. 
 	function get_comments($post_id){		
+		
 		$i=0;
 		$comments = array();
-		$select_query = sprintf("SELECT comment_id, writer, comment, written_date FROM comment where post_id = %d", $post_id);				
-
+		
 		$conn = get_sqlserver_conn();
-		$result = mysqli_query($conn, $select_query);
+		$stmt = mysqli_prepare($conn, "SELECT comment_id, writer, comment, written_date FROM comment 
+		WHERE post_id = ?");				
+		mysqli_stmt_bind_param($stmt, "d", $post_id);
+		mysqli_stmt_execute($stmt);
+		
+		$result = mysqli_stmt_get_result($stmt);
 		if($result === false){
 			die(mysqli_error($conn));
 		}
@@ -261,7 +315,6 @@
 	/// 더미게시물 생성.
 	function make_dummy_post($conn, $count){
 		
-		$insert_query = "";
 		for($i=0; $i<$count; $i++){
 			
 			$post['writer'] = "writer" . $i;
@@ -269,8 +322,9 @@
 			$post['content'] = "content" . $i;
 			$post['board_id'] = rand(1,2);
 			
-			$insert_query = sprintf("INSERT INTO post(writer, title, content, board_id) VALUES('%s', '%s', '%s', %d)", $post['writer'], $post['title'], $post['content'], $post['board_id']);		
-			if (mysqli_query($conn, $insert_query) === false) {
+			$stmt = mysqli_prepare($conn, "INSERT INTO post(writer, title, content, board_id) VALUES(?, ?, ?, ?)");		
+			mysqli_stmt_bind_param($stmt, "sssd", $post['writer'], $post['title'], $post['content'], $post['board_id']);
+			if (mysqli_stmt_execute($stmt) === false) {
 				die(mysqli_error($conn));
 			}
 		}

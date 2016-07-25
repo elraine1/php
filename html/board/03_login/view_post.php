@@ -42,9 +42,7 @@
 			$post_id = $_GET['post_id'];
 			$board_id = $_GET['board_id'];
 		}	
-		
-		
-		
+
 	?>
 	
 	<h2>글 보기</h2>
@@ -116,14 +114,20 @@
 								if(isset($_SESSION['login_status']) && $_SESSION['login_status'] === true){
 									printf("<input type='text' name='writer' size='14' value='%s' readonly>", $_SESSION['nickname']);
 								}else{
-									printf("<input type='text' name='writer' size='14'>");
+									printf("<input type='text' name='writer' size='14' value='로그인 후 작성 가능' disabled>");
 								}
 							?>
 						</td>
-						<td class="comment" align="center" width="200px"><textarea name="comment" rows="4" cols="100"></textarea></td>
-						<td>
-							<input type="submit" value="확인" align="center"><br>
+						<td class="comment" align="center" width="200px">
+						<?php 
+							if(isset($_SESSION['login_status']) && $_SESSION['login_status'] === true){
+								printf("<textarea name='comment' rows='4' cols='100'></textarea>");
+							}else{
+								printf("<textarea name='comment' rows='4' cols='100' disabled>로그인 후 작성 가능</textarea>");
+							}
+						?>
 						</td>
+						<td><input type="submit" value="확인" align="center"></td>
 					</tr>						
 				</table>
 			</form>	

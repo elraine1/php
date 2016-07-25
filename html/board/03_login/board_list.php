@@ -151,6 +151,10 @@
 			printf("<input type='submit' value='검색'> ");
 			printf("</form>");
 			
+			///// htmlspecialchars - 브라우저 작동을 보장함. 
+			////  usage: 
+			////  echo htmlspecialchars();
+			
 			// Block Paging
 			// 이전 block, 다음 block 이 없는 경우 <a> 태그 사용 안 함. 
 			if($block_start == 1){
