@@ -9,12 +9,12 @@ require_once($mylib_path);
 require_once ('session.php');
 start_session();
  
-if (isset($_POST['username'], $_POST['password'])) {
+if (isset($_POST['username'], $_POST['hash'])) {
     $username = $_POST['username'];
-    $password = $_POST['password']; 
+    $hash = $_POST['hash']; 
 	
-//	echo $username . " & " . $password;
-    if (try_to_login($username, $password) == true) {
+//	echo $username . " & " . $hash;
+    if (try_to_login($username, $hash) == true) {
 		header('Location: protected_page.php');
     } else {
 		// 이멜주소 또는 비번이 등록되지 않았거나 틀림

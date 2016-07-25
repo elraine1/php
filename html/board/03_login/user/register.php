@@ -4,9 +4,9 @@ $mylib_path = $_SERVER['DOCUMENT_ROOT'] . '/../includes/mylib_board.php';
 require_once($mylib_path);
 require_once('session.php');	
 				
-if (isset($_POST['username'], $_POST['password'])) {
+if (isset($_POST['username'], $_POST['hash'])) {
     $username = $_POST['username'];
-    $password = $_POST['password'];
+    $hash = $_POST['hash'];
 	$nickname = $_POST['nickname'];
 	$email = $_POST['email'];
 	
@@ -19,7 +19,7 @@ if (isset($_POST['username'], $_POST['password'])) {
 		header('Location: error.php?error_code=4');
 	} else {
 		$stmt = mysqli_prepare($conn, "INSERT INTO user_account(username, hash, nickname, email) VALUES (?, ?, ?, ?)");	
-		mysqli_stmt_bind_param($stmt, "ssss", $username, password_hash($password, PASSWORD_DEFAULT), $nickname, $email);
+		mysqli_stmt_bind_param($stmt, "ssss", $username, password_hash($hash, PASSWORD_DEFAULT), $nickname, $email);
 		mysqli_stmt_execute($stmt);
 		
 		header('Location: ../index.php');
