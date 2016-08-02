@@ -29,6 +29,42 @@
 			text-decoration: none;
 		}
 	</style>
+		
+	<script>
+	var isEditCommentMode = false;
+	function editComment(button, commentId, form) {
+		var cell = document.getElementById(commentId);
+		if (isEditCommentMode == false) {
+			var content = cell.innerHTML;
+			cell.innerHTML = '';
+			var textarea = document.createElement('textarea');
+			textarea.id = replyId + 'textarea';
+			cell.appendChild(textarea);
+			textarea.value = content;
+			textarea.cols = 60;
+			isEditCommentMode = true;
+			button.value = '수정완료';
+		} else {
+			var textarea = document.getElementById(replyId + 'textarea');
+			var content = textarea.value;
+			if (content == '') {
+				alert('댓글은 빈칸 안됨');
+				textarea.focus();
+				return false;
+			}
+			//cell.innerHTML = content;
+			isEditCommentMode = false;
+			button.value = '수정';
+			var element = document.createElement('input');
+			form.appendChild(element);
+			element.name = 'content';
+			element.type = 'hidden';
+			element.value = content;
+			form.submit();
+		}
+		return false;
+	}
+	</script>
 </head>
 <body>
 	<?php		
@@ -61,10 +97,10 @@
 			printf("<tr><th>작성자</th><td>%s</td></tr>", $post['writer']);
 			printf("<tr><th>조회수</th><td>%d</td></tr>",$post['hits']);
 			printf("<tr><th>작성일</th><td>%s</td></tr>",convert_time_string($post['last_update']));
-			printf("<tr><th>제목</th><td>%s</td></tr>", $post['title']);
+			printf("<tr><th>제목</th><td>%s</td></tr>", htmlspecialchars($post['title']));
 			printf("<tr><td height='10' colspan='2'></td></tr>");
 			printf("<tr><th colspan='2' align='center'>내 용</th></tr>");
-			printf("<tr><td id='td_content' colspan='2'><textarea disabled rows='12' cols='150'>%s</textarea></td></tr>", $post['content']);
+			printf("<tr><td id='td_content' colspan='2'><textarea disabled rows='12' cols='150'>%s</textarea></td></tr>", htmlspecialchars($post['content']));
 			printf("</table>");
 			
 			printf("<br><a href='./board_list.php?board_id=%d&page=%d'><button>글목록으로</button></a>", $post['board_id'], get_page_by_post_id($post['board_id'], $post['post_id']));
@@ -90,11 +126,20 @@
 				for($i=0; $i < count($comments); $i++){
 					printf("<tr>");
 					printf("<td class='user_id' height='20' width='130'> %s </td>", $comments[$i]['writer']);
-					printf("<td class='comment' width='720'> %s </td>", $comments[$i]['comment']);
+					printf("<td class='comment' width='720'> %s </td>", htmlspecialchars($comments[$i]['comment']));
 					printf("<td class='date'> %s </td>",convert_time_string($comments[$i]['w_date']));
 					
-					if($_SESSION['nickname'] == $comments[$i]['writer']){
-						printf("<td><a href='./comment_delete_process.php?comment_id=%d'><button>삭제</button></a></td>", $comments[$i]['comment_id']);
+					if (check_login() && $_SESSION['nickname'] === $comments[$i]['writer']) {
+		?>
+						<td><form action="comment_modify_process.php" method="post">
+							<input type="button" value="수정" style="width: 50px;" onclick="editComment(this, <?php echo $comments[$i]['comment_id']; ?>, this.form);"> </input>
+							<input type="hidden" name="comment_id" id="<?php echo $comments[$i]['comment_id']; ?>" value="<?php echo $comments[$i]['comment']; ?>"</input>
+						</form></td>
+						<td><form action="comment_delete_process.php" method="post">
+							<input type="submit" value="삭제" style="width: 50px;"> </input>
+							<input type="hidden" name="comment_id" value="<?php echo $comments[$i]['comment_id']; ?>"></input>
+						</form></td>
+		<?php
 					}
 					printf("</tr>");
 				}

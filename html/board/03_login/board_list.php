@@ -128,9 +128,9 @@
 				printf("<td align='center'>%s</td>", $posts[$i]['writer']);
 				
 				if($posts[$i]['comment_count'] > 0){
-					printf("<td align='left'><a href='./view_post.php?board_id=%d&post_id=%d'> %s <b>[%d]</b></td>", $board_id, $posts[$i]['post_id'],$posts[$i]['title'], $posts[$i]['comment_count']);
+					printf("<td align='left'><a href='./view_post.php?board_id=%d&post_id=%d'> %s <b>[%d]</b></td>", $board_id, $posts[$i]['post_id'], htmlspecialchars($posts[$i]['title']), $posts[$i]['comment_count']);
 				}else{
-					printf("<td align='left'><a href='./view_post.php?board_id=%d&post_id=%d'> %s </td>", $board_id, $posts[$i]['post_id'],$posts[$i]['title']);
+					printf("<td align='left'><a href='./view_post.php?board_id=%d&post_id=%d'> %s </td>", $board_id, $posts[$i]['post_id'],htmlspecialchars($posts[$i]['title']));
 				}
 				
 				printf("<td align='center'>%d</td>", $posts[$i]['hits']);
