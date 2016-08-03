@@ -38,14 +38,14 @@
 			var content = cell.innerHTML;
 			cell.innerHTML = '';
 			var textarea = document.createElement('textarea');
-			textarea.id = replyId + 'textarea';
+			textarea.id = commentId + 'textarea';
 			cell.appendChild(textarea);
 			textarea.value = content;
 			textarea.cols = 60;
 			isEditCommentMode = true;
 			button.value = '수정완료';
 		} else {
-			var textarea = document.getElementById(replyId + 'textarea');
+			var textarea = document.getElementById(commentId + 'textarea');
 			var content = textarea.value;
 			if (content == '') {
 				alert('댓글은 빈칸 안됨');
@@ -60,6 +60,7 @@
 			element.name = 'content';
 			element.type = 'hidden';
 			element.value = content;
+			
 			form.submit();
 		}
 		return false;
@@ -126,15 +127,17 @@
 				for($i=0; $i < count($comments); $i++){
 					printf("<tr>");
 					printf("<td class='user_id' height='20' width='130'> %s </td>", $comments[$i]['writer']);
-					printf("<td class='comment' width='720'> %s </td>", htmlspecialchars($comments[$i]['comment']));
+					printf("<td class='comment' width='720' id='%d'>%s</td>", $comments[$i]['comment_id'], htmlspecialchars($comments[$i]['comment']));
 					printf("<td class='date'> %s </td>",convert_time_string($comments[$i]['w_date']));
 					
 					if (check_login() && $_SESSION['nickname'] === $comments[$i]['writer']) {
 		?>
-						<td><form action="comment_modify_process.php" method="post">
+						<td>
+							<form action="comment_modify_process.php" method="post">
 							<input type="button" value="수정" style="width: 50px;" onclick="editComment(this, <?php echo $comments[$i]['comment_id']; ?>, this.form);"> </input>
-							<input type="hidden" name="comment_id" id="<?php echo $comments[$i]['comment_id']; ?>" value="<?php echo $comments[$i]['comment']; ?>"</input>
-						</form></td>
+							<input type="hidden" name="comment_id" value="<?php echo $comments[$i]['comment_id']; ?>"></input>
+							</form>
+						</td>
 						<td><form action="comment_delete_process.php" method="post">
 							<input type="submit" value="삭제" style="width: 50px;"> </input>
 							<input type="hidden" name="comment_id" value="<?php echo $comments[$i]['comment_id']; ?>"></input>
