@@ -272,15 +272,32 @@
 	}
 	
 	// 해당 게시글의 모든 댓글을 가져오는 함수. 
-	function get_comments($post_id){		
+	function get_comments($post_id){	
+//	function get_comments($post_id, $curr_block){		
 		
 		$i=0;
+//		$block_size = 10;
+//		$block_start = $curr_block * $block_size;
+//		$block_end = $block_start + $block_size;
+		
 		$comments = array();
 		
 		$conn = get_sqlserver_conn();
+		
 		$stmt = mysqli_prepare($conn, "SELECT comment_id, writer, comment, written_date FROM comment 
-		WHERE post_id = ?");				
+		WHERE post_id = ?");						
 		mysqli_stmt_bind_param($stmt, "d", $post_id);
+		
+		/*
+		$stmt = mysqli_prepare($conn, 
+		"   SELECT *
+			FROM (  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, comment.* 
+					FROM (SELECT @ROWNUM := 0) as R, comment	
+					WHERE post_id = ?
+					ORDER BY comment_id desc) as comment
+			WHERE ? < comment.ROWNUM and comment.ROWNUM < ?");
+		mysqli_stmt_bind_param($stmt, "ddd", $post_id, $block_start, $block_end);
+		*/
 		mysqli_stmt_execute($stmt);
 		
 		$result = mysqli_stmt_get_result($stmt);

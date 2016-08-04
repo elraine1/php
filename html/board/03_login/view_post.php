@@ -2,6 +2,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <html>
 <head>
+	<script language="javascript" src="./jquery/jquery-1.11.2.js"></script>
+	<script language="javascript" src="./jquery/jquery-ui.js"></script>
 	<link rel="stylesheet" type="text/css" href="/php_style/style1.css">
 	<style type="text/css">
 		table{
@@ -27,6 +29,10 @@
 		}
 		a{
 			text-decoration: none;
+		}
+		#more_comment_btn{
+			text-align:center;
+			width:400px;
 		}
 	</style>
 		
@@ -55,16 +61,41 @@
 			//cell.innerHTML = content;
 			isEditCommentMode = false;
 			button.value = '수정';
+		
+/*		
 			var element = document.createElement('input');
 			form.appendChild(element);
 			element.name = 'content';
 			element.type = 'hidden';
-			element.value = content;
-			
+			element.value = content;			
 			form.submit();
+			alert(commentId);
+			alert(content);
+*/			
+			
+			$.ajax({
+				url: 'edit_comment.php',
+				async: false,
+				method: 'POST',
+				data: {
+					comment_id: commentId,
+					content: content
+				},
+				success: function(result){
+					// textarea => span 
+					
+				},
+				error: function(xhr){
+					alert('Error');
+				},
+				timeout : 3000
+			});
+			
 		}
 		return false;
 	}
+	
+	
 	</script>
 </head>
 <body>
@@ -115,6 +146,7 @@
 			$comments = get_comments($post_id);
 		?>	
 	</div>
+	
 	<div class="comment_wrap">
 		<br><br>
 		<?php 
@@ -153,6 +185,7 @@
 		?>
 		
 		<div class="comment_form">
+			<input type="button"  id="more_comment_btn" value="댓글 더 보기" onclick="#">
 			<form action="comment_write_process.php" method="post">
 				<?php printf("<input type='hidden' name='post_id' value='%d'>", $post_id); ?>
 				<table width="800px">
