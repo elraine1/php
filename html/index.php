@@ -52,12 +52,14 @@
 			<a href="/board/01_file/index.php">My Board</a> <br>
 			<a href="/board/02_db/index.php">My Board(DB)</a> <br>
 			<a href="/board/03_login/index.php">My Board(Login)</a> <br>
+			<a href="/board/04_ajax/index.php"><b>My Board(AJAX)</b></a> <br>
 		</div>
 		<hr>
 		<div id="div_board">
 			<h3>Dictionary</h3>
 			<a href="/dictionary/01_file/dictionary.php">Dictionary</a> <br>
-			<a href="/dictionary/02_db/lecture_4_01.php">DB 입력</a> <br>
+			<a href="/dictionary/02_db/lecture_4_01.php">Dictionary(DB)</a> <br>
+			<a href="/dictionary/03_ajax/lecture_4_01.php"><b>Dictionary(AJAX)</b></a> <br>
 		</div>
 		<hr>
 		<div id="div_board">
@@ -77,6 +79,11 @@
 			<a href="/excercise/permutation/permutation_index.php">순열 출력하기</a><br>
 			<a href="/excercise/LCS/lcs_index.php">LCS</a><br>
 			<a href="/excercise/diff/diff_index.php">DIFF</a><br>
+			<a href="/excercise/regex/lecture_1_30_php_regex.php">regex</a><br>
+			<a href="test.php">test</a><br>
+			<a href="/excercise/php_javascript.php">test2</a><br>
+			<a href="/excercise/mancala/test.php">mancala</a><br>
+			
 			
 		</div>
 		<hr>
