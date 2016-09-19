@@ -26,7 +26,7 @@
 	}
 	#div_etc {
 		border: 1px solid #ededed;
-		height: 300px;
+		height: 500px;
 		width: 90%;
 		padding: 0px 15px 15px 15px;
 		margin: 0 auto;
@@ -83,6 +83,9 @@
 			<a href="test.php">test</a><br>
 			<a href="/excercise/php_javascript.php">test2</a><br>
 			<a href="/excercise/mancala/test.php">mancala</a><br>
+			<a href="/excercise/rss_reader/rss.php">rss</a><br>
+			<a href="/excercise/eq/index.php">earch_quake</a><br>
+			
 			
 			
 		</div>
