@@ -63,10 +63,18 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 </style>
 		
-		
 <script src="//code.jquery.com/jquery.min.js"></script>	
 <script type="text/javascript">
 
+
+var map;
+var markers = [];
+var circles = [];
+var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+var labelIndex = 0;
+
+
+// api로부터 데이터를 가져온 뒤, 성공시 마커를 만든다.
 var eqkMapList = [
 	{
 		"tmSeq": 0,
@@ -195,22 +203,11 @@ function convertTimeFormat(str){
 	var result = "";
 	result += str.substr(0, 4) + ".";	// year
 	result += str.substr(4, 2) + ".";	// month
-	result += str.substr(6, 2) + ".";	// date
+	result += str.substr(6, 2) + ". ";	// date
 	result += str.substr(8, 2) + ":";	// hour
 	result += str.substr(10, 2) + ":";	// minute
 	result += str.substr(12, 2);		// second
 	return result;
-}
-
-
-
-function leftPadding(num){
-	num = num.toString();
-	if(num.length == 1){
-		return " " + num;
-	}else {
-		return num;
-	}
 }
 
 function initListboxItem(){
@@ -220,7 +217,7 @@ function initListboxItem(){
 	var mt;
 	var tmEqk;
 	for(var i=0; i < 11; i++){
-		index = "[" + leftPadding(i+1) + "]";
+		index = "[" + labels.substr(i % labels.length, 1) + "]";
 		latlng = "[" + eqkMapList[i]['lat'] + ", " + eqkMapList[i]['lon'] + "]";
 		mt = "[M" + eqkMapList[i]['mt'] + "]";
 		tmEqk = "[" + convertTimeFormat(eqkMapList[i]['tmEqk']) + "]";
@@ -228,49 +225,131 @@ function initListboxItem(){
 	}	
 }
 
-</script>
-
-
-<script type="text/javascript">
 ////////////////////////////////////////////// Google Map API
-var map;
-var marker;
-
 function initMap() {
+	
 	var myLatlng = new google.maps.LatLng(eqkMapList[0]['lat'], eqkMapList[0]['lon']);
-	var mt = eqkMapList[0]['mt'];
-	var tmEqk = convertTimeFormat(eqkMapList[0]['tmEqk']);
-	
-	
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: myLatlng,
 		zoom: 10
 	});
-	marker = new google.maps.Marker({
+	
+	makeMarkers();
+	makeCircles();
+	
+//	alert(circles.length);
+//	setMapOnMarker(0);
+}
+
+// 지진 기록(좌표)에 대한 마커 목록 생성
+function makeMarkers(){
+	for(var i=0; i < eqkMapList.length; i++){
+		addMarker(i);
+	}
+}
+
+// 하나의 마커를 생성
+function addMarker(index){
+	
+	index = parseInt(index);
+	
+	var myLatlng = new google.maps.LatLng(eqkMapList[index]['lat'], eqkMapList[index]['lon']);
+	var tmEqk = convertTimeFormat(eqkMapList[index]['tmEqk']);
+	var mt = eqkMapList[index]['mt'].toString();
+	
+	var myTitle = "- 지진 발생 일시 -\n" + tmEqk + "\n[M" + mt + "]"; 
+	var myLabel = labels.substr(index,1);
+	
+	var marker = new google.maps.Marker({
 		position: myLatlng,
-		label: mt,
-		map: map,
-		title: "- 지진 발생 일시 -\n" + tmEqk
+		label: myLabel,
+		title: myTitle
 	});
-//	marker.setMap(map); // or Marker({map: map});
+	markers.push(marker);
 }
 
-function drawMarker(){
+function makeCircles(){
+	for(var i=0; i < eqkMapList.length; i++){
+		addCircle(i);
+	}
+} 
+
+function addCircle(index){
+	
+	var myLatlng = new google.maps.LatLng(eqkMapList[index]['lat'], eqkMapList[index]['lon']);
+	
+//	alert(myLatlng.coord.lat);
+	var magnitudeCircle = new google.maps.Circle({		
+		strokeColor: '#FF0000',
+		strokeOpacity: 0.8,
+		strokeWeight: 2,
+		fillColor: '#FF0000',
+		fillOpacity: 0.35,
+		center: myLatlng,
+		radius: Math.pow(eqkMapList[index]['mt'], 2) * 1000
+    });
+	circles.push(magnitudeCircle);
+}
 	
 	
-	
+
+// Sets the map on all markers in the array.
+function setMapOnAll(map) {
+	for (var i = 0; i < markers.length; i++) {
+		markers[i].setMap(map);
+	}
 }
 
-function drawAllMarker(){
-	
-	
+// Removes the markers from the map, but keeps them in the array.
+function clearMarkers() {
+	setMapOnAll(null);
 }
 
-function drawAllMarkerAnimated(){
-	
-	
-	
+// Shows any markers currently in the array.
+function showMarkers() {
+	setMapOnAll(map);
 }
+
+/*
+// Deletes all markers in the array by removing references to them.
+function deleteMarkers() {
+	clearMarkers();
+	markers = [];
+}*/
+
+function setMapOnMarker(index){
+	clearMarkers();
+	markers[index].setMap(map);
+}
+
+
+//////// Circles
+// Sets the map on all circles in the array.
+function setMapOnAllCircles(map){
+	for(var i=0; i < circles.length; i++){
+		circles[i].setMap(map);
+	}
+}
+
+function clearCircles(){
+	setMapOnAllCircles(null);
+}
+
+function showCircles(){
+	setMapOnAllCircles(map);
+}
+
+/*
+function deleteCircles(){
+	clearCircles();
+	circles = [];
+}*/
+
+function setMapOnCircle(index){
+	clearCircles();
+	circles[index].setMap(map);
+}
+
 </script>
 
 <script type="text/javascript">
@@ -317,7 +396,24 @@ $(document).ready(function(){
 		*/
 		
 	});
+	
+	$("#showAllMarkers").click(function(){
+		showMarkers();
+		showCircles();
+	});
+	
+	$("#hideAllMarkers").click(function(){
+		clearMarkers();
+		clearCircles();
+	});
+	
+	$("#eqkListbox").change(function(){
+		//alert($(this).val());
 		
+		var index = parseInt($(this).val());		
+		setMapOnMarker(index);
+		setMapOnCircle(index);
+	});
 });
 		
 </script>
@@ -349,7 +445,8 @@ $(document).ready(function(){
 			<div id="menu">
 				<input type="button" id="prevBtn" value="이전">
 				<input type="button" id="nextBtn" value="다음">
-				<input type="button" id="allBtn" value="모두보기"><br>
+				<input type="button" id="showAllMarkers" value="모두보기">
+				<input type="button" id="hideAllMarkers" value="감추기"><br>
 			</div>
 		</div>
 	</div>
@@ -359,14 +456,14 @@ $(document).ready(function(){
 		<div class="youtube_content">
 			<fieldset>
 				<legend>한국 지진 실시간 중계</legend>
-				<iframe width="560" height="360" class="wiki-youtube" src="//www.youtube.com/embed/LqpjAhmhXcQ" frameborder="0" allowfullscreen=""></iframe>
+				<iframe width="100%" height="360px" class="wiki-youtube" src="//www.youtube.com/embed/LqpjAhmhXcQ" frameborder="0" allowfullscreen=""></iframe>
 			</fieldset>
 		</div>
 		
 		<div class="youtube_content">
 			<fieldset>
 				<legend>일본 지진 실시간 중계</legend>
-				<iframe width="560" height="360" class="wiki-youtube" src="//www.youtube.com/embed/qmu8zrllUUI" frameborder="0" allowfullscreen=""></iframe>
+				<iframe width="100%" height="360px" class="wiki-youtube" src="//www.youtube.com/embed/qmu8zrllUUI" frameborder="0" allowfullscreen=""></iframe>
 			</fieldset>
 		<div>
 	</div>
