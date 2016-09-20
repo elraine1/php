@@ -132,11 +132,11 @@
 </head>
 <body>
 
-
+<!--
 <span id="timer" class="timer">Timer not started yet</span>
-<!-- <span id="flash" class="timer mytimer">Flash</span> -->
+<span id="flash" class="timer mytimer">Flash</span>
 <span id="dummy"></span>
-
+-->
 <h2> - Mancala! - </h2>
 <?php
 	require_once ('mancala_lib.php');
@@ -254,7 +254,6 @@
 	<br><br>
 	<a href="test.php"><button>go test.php</button></a>
 
-</div>
 </body>
 </html>
 	

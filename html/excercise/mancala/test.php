@@ -1,9 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
 <style type="text/css">
 	#mancala_board {
 		border: 2px solid gray;
 		
 	}
-
+	
 	.mancala{
 		width: 50px;
 		height: 100px;
@@ -19,13 +24,17 @@
 		
 		font-weight: bold;
 		font-size: 15px;
-	}	
-	
-	.p1{
-		color: salmon;
 	}
+	
 	.p2{
-		color: blue;
+		color: MidnightBlue ;
+	}
+	.p1{
+		color: green;
+	}
+	
+	input[type="button"]:disabled {
+		background: darkgray;
 	}
 	
 </style>
@@ -69,4 +78,6 @@
 	</tr>
 	</table>
 	
+	</body>
+</html>
 	
