@@ -70,135 +70,21 @@ html, body { height: 100%; margin: 0; padding: 0; }
 var map;
 var markers = [];
 var circles = [];
-var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+var labels = '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@#$%^&*';
 var labelIndex = 0;
-
+//var eqkMapList = [];
 
 // api로부터 데이터를 가져온 뒤, 성공시 마커를 만든다.
 var eqkMapList = [
 	{
-		"tmSeq": 0,
-		"cnt": 0,
+		"num": 184,
 		"tmEqk": "20160919210051",
 		"lat": 35.75,
 		"lon": 129.17,
 		"mt": 2.1,
-		"inT": "",
-		"rem": "",
-		"cor": "",
-	},
-	{
-		"tmSeq": 1,
-		"cnt": 1,
-		"tmEqk": "20160919203358",
-		"lat": 35.74,
-		"lon": 129.18,
-		"mt": 4.5,
-		"inT": "",
-		"rem": "",
-		"cor": "",
-	},
-	{
-		"tmSeq": 2,
-		"cnt": 2,
-		"tmEqk": "20160919091759",
-		"lat": 35.76,
-		"lon": 129.17,
-		"mt": 2.1,
-		"inT": "",
-		"rem": "",
-		"cor": "",
-	},
-	{
-		"tmSeq": 3,
-		"cnt": 3,
-		"tmEqk": "20160918223807",
-		"lat": 35.75,
-		"lon": 129.18,
-		"mt": 2.8,
-		"inT": "",
-		"rem": "",
-		"cor": "",
-	},
-	{
-		"tmSeq": 4,
-		"cnt": 4,
-		"tmEqk": "20160918162754",
-		"lat": 35.76,
-		"lon": 129.17,
-		"mt": 2.4,
-		"inT": "",
-		"rem": "",
-		"cor": "",
-	},
-	{
-		"tmSeq": 5,
-		"cnt": 5,
-		"tmEqk": "20160917162158",
-		"lat": 35.76,
-		"lon": 129.18,
-		"mt": 2.1,
-		"inT": "",
-		"rem": "",
-		"cor": "",
-	},
-	{
-		"tmSeq": 6,
-		"cnt": 6,
-		"tmEqk": "20160917071256",
-		"lat": 35.76,
-		"lon": 129.18,
-		"mt": 2.1,
-		"inT": "",
-		"rem": "",
-		"cor": "",
-	},
-	{
-		"tmSeq": 7,
-		"cnt": 7,
-		"tmEqk": "20160916211424",
-		"lat": 35.76,
-		"lon": 129.18,
-		"mt": 2.2,
-		"inT": "",
-		"rem": "",
-		"cor": "",
-	},
-	{
-		"tmSeq": 8,
-		"cnt": 8,
-		"tmEqk": "20160916195446",
-		"lat": 35.74,
-		"lon": 129.17,
-		"mt": 2.1,
-		"inT": "",
-		"rem": "",
-		"cor": "",
-	},
-	{
-		"tmSeq": 9,
-		"cnt": 9,
-		"tmEqk": "20160916053109",
-		"lat": 35.78,
-		"lon": 129.19,
-		"mt": 2.2,
-		"inT": "",
-		"rem": "",
-		"cor": "",
-	},
-	{
-		"tmSeq": 10,
-		"cnt": 10,
-		"tmEqk": "20160915204825",
-		"lat": 35.76,
-		"lon": 129.19,
-		"mt": 2.6,
-		"inT": "",
-		"rem": "",
-		"cor": "",
-	}						
-];
-
+	}
+	];
+	
 function convertTimeFormat(str){
 	var result = "";
 	result += str.substr(0, 4) + ".";	// year
@@ -216,7 +102,7 @@ function initListboxItem(){
 	var latlng;
 	var mt;
 	var tmEqk;
-	for(var i=0; i < 11; i++){
+	for(var i=0; i < eqkMapList.length; i++){
 		index = "[" + labels.substr(i % labels.length, 1) + "]";
 		latlng = "[" + eqkMapList[i]['lat'] + ", " + eqkMapList[i]['lon'] + "]";
 		mt = "[M" + eqkMapList[i]['mt'] + "]";
@@ -234,12 +120,56 @@ function initMap() {
 		zoom: 10
 	});
 	
+	var fileName = "2016.txt";
+	dataLoad(fileName);
+	initListboxItem();	
 	makeMarkers();
 	makeCircles();
 	
 //	alert(circles.length);
 //	setMapOnMarker(0);
 }
+
+function dataLoad(fileName){
+	
+	var url = 'dataLoad.php';
+	
+	$.ajax({
+		async: false,
+		type: "POST",
+		url: url,
+		data: {fileName: fileName},
+		dataType: "text",
+		success: function(data){
+			initEqkMapList(data);
+		},
+		error: function(xhr){
+			alert(xhr.requestText);
+		},
+		timeout: 3000
+	});
+}
+
+function initEqkMapList(data){
+
+	eqkMapList = [];
+	var lines = data.split("\n");
+	var eqkInfo;
+	var tmp;
+	
+	for(var i=0; i < lines.length; i++){
+		tmp = lines[i].split(" ");
+		eqkInfo = {
+			"num": parseInt(tmp[0]),
+			"tmEqk": tmp[1],
+			"mt": parseFloat(tmp[2]),	
+			"lat": parseFloat(tmp[3]),
+			"lon": parseFloat(tmp[4]),		
+		};
+		eqkMapList.push(eqkInfo);
+	}
+}
+
 
 // 지진 기록(좌표)에 대한 마커 목록 생성
 function makeMarkers(){
@@ -286,7 +216,7 @@ function addCircle(index){
 		fillColor: '#FF0000',
 		fillOpacity: 0.35,
 		center: myLatlng,
-		radius: Math.pow(eqkMapList[index]['mt'], 2) * 1000
+		radius: Math.pow(eqkMapList[index]['mt'], 3) * 500
     });
 	circles.push(magnitudeCircle);
 }
@@ -310,12 +240,12 @@ function showMarkers() {
 	setMapOnAll(map);
 }
 
-/*
+
 // Deletes all markers in the array by removing references to them.
 function deleteMarkers() {
 	clearMarkers();
 	markers = [];
-}*/
+}
 
 function setMapOnMarker(index){
 	clearMarkers();
@@ -339,11 +269,10 @@ function showCircles(){
 	setMapOnAllCircles(map);
 }
 
-/*
 function deleteCircles(){
 	clearCircles();
 	circles = [];
-}*/
+}
 
 function setMapOnCircle(index){
 	clearCircles();
@@ -356,46 +285,6 @@ function setMapOnCircle(index){
 ////////////////////////////////////// JQUERY
 $(document).ready(function(){
 	
-	initListboxItem();	
-	
-	$("#start_btn").click(function(){
-
-		/*
-		var url = "eqProxy.php";
-		var form_data = {
-			"fromTmFc": "20160912",
-			"toTmFc": "20160919",	
-			"numOfRows": 999,
-			"pageNo": 1
-		};
-		
-		$.ajax({
-			
-			// 한 번에 10개씩 밖에 안나옴! 
-			// api request 옵션 손볼 것. display, start, .. default option 임.
-			
-			dataType: "xml",
-			type: "POST",
-			async: false,
-			url: action,
-			data: form_data,
-			success: function(result){
-//				alert(result);
-				var xml = $(result);
-				var items = xml.find("item");
-				var html = "";
-				
-				
-			},
-			error: function(xhr){
-				alert(xhr.responseText);
-//				alert('Error');
-			},
-			timeout : 3000
-		});
-		*/
-		
-	});
 	
 	$("#showAllMarkers").click(function(){
 		showMarkers();
@@ -443,8 +332,8 @@ $(document).ready(function(){
 			</div>
 			
 			<div id="menu">
-				<input type="button" id="prevBtn" value="이전">
-				<input type="button" id="nextBtn" value="다음">
+				<!-- input type="button" id="prevBtn" value="이전" >
+				<input type="button" id="nextBtn" value="다음" -->
 				<input type="button" id="showAllMarkers" value="모두보기">
 				<input type="button" id="hideAllMarkers" value="감추기"><br>
 			</div>
