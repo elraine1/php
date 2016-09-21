@@ -209,7 +209,6 @@ function initEqkMapList(data){
 
 // 지진 기록(좌표)에 대한 마커 목록 생성
 function makeMarkers(){
-	alert(eqkMapList.length);
 	for(var i=0; i < eqkMapList.length; i++){
 		addMarker(i);
 	}
