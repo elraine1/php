@@ -6,7 +6,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 #content_wrap{
 	width: 100%;
-	height: 600px;
+	height: 800px;
 	margin: 0 auto;
 }
 
@@ -35,7 +35,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 #eqkList{
 	width: 90%;
-	height: 570px;
+	height: 770px;
 	margin: 0 auto;
 	margin-bottom: 5px;
 	border: 1px dashed red;
@@ -49,17 +49,33 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 #youtube_wrap{
 	width: 100%;
-	height: 450px;
+	height: 500px;
 	margin-left: 1%;
 	clear: both;	
 }
 
+
+.youtube_fieldset{
+	height: 100%;
+}
+
 .youtube_content{
 	width: 47%;
-	height: 100%;
+	height: 90%;
 	margin-right: 5px;
 	float: left;	
 }
+
+
+#footer_div{
+	
+	width: 100%;
+	height: 75px;
+	border: 2px dotted salmon;
+	background-color: salmon;
+	text-align: center;
+}
+
 
 </style>
 		
@@ -70,20 +86,20 @@ html, body { height: 100%; margin: 0; padding: 0; }
 var map;
 var markers = [];
 var circles = [];
-var labels = '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@#$%^&*';
+var labels = '1234567890';
+//var labels = '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@#$%^&*';
 var labelIndex = 0;
 //var eqkMapList = [];
 
 // api로부터 데이터를 가져온 뒤, 성공시 마커를 만든다.
 var eqkMapList = [
 	{
-		"num": 184,
-		"tmEqk": "20160919210051",
+		"num": 189,
+		"tmEqk": "20160921115354",
 		"lat": 35.75,
-		"lon": 129.17,
-		"mt": 2.1,
-	}
-	];
+		"lon": 129.18,
+		"mt": 3.5,
+	}];
 	
 function convertTimeFormat(str){
 	var result = "";
@@ -96,6 +112,16 @@ function convertTimeFormat(str){
 	return result;
 }
 
+function leftPad(num){
+	switch(num.toString().length){
+		case 3: break;
+		case 2: num = '0' + num; break;
+		case 1: num = '00' + num; break;
+		default: break;
+	}
+	return num;
+}
+
 function initListboxItem(){
 	var listbox = document.getElementById("eqkListbox");
 	var index;
@@ -103,9 +129,10 @@ function initListboxItem(){
 	var mt;
 	var tmEqk;
 	for(var i=0; i < eqkMapList.length; i++){
-		index = "[" + labels.substr(i % labels.length, 1) + "]";
-		latlng = "[" + eqkMapList[i]['lat'] + ", " + eqkMapList[i]['lon'] + "]";
-		mt = "[M" + eqkMapList[i]['mt'] + "]";
+//		index = "[" + labels.substr(i % labels.length, 1) + "]";
+		index = "[" + leftPad(eqkMapList[i]['num']) + "]";
+		latlng = "[" + eqkMapList[i]['lat'].toFixed(2) + ", " + eqkMapList[i]['lon'].toFixed(2) + "]";
+		mt = "[M" + eqkMapList[i]['mt'].toFixed(1) + "]";
 		tmEqk = "[" + convertTimeFormat(eqkMapList[i]['tmEqk']) + "]";
 		$("#eqkListbox option:eq(" + i + ")").after("<option value='" + i + "'>" + index + " " +  mt + " " + latlng + " " + tmEqk + "</option>");	
 	}	
@@ -117,7 +144,7 @@ function initMap() {
 	var myLatlng = new google.maps.LatLng(eqkMapList[0]['lat'], eqkMapList[0]['lon']);
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: myLatlng,
-		zoom: 10
+		zoom: 8
 	});
 	
 	var fileName = "2016.txt";
@@ -188,7 +215,8 @@ function addMarker(index){
 	var mt = eqkMapList[index]['mt'].toString();
 	
 	var myTitle = "- 지진 발생 일시 -\n" + tmEqk + "\n[M" + mt + "]"; 
-	var myLabel = labels.substr(index,1);
+	var myLabel = (eqkMapList[index]['num'] % 10).toString();
+//	var myLabel = labels.substr((index % (labels.length)),1);
 	
 	var marker = new google.maps.Marker({
 		position: myLatlng,
@@ -230,16 +258,15 @@ function setMapOnAll(map) {
 	}
 }
 
-// Removes the markers from the map, but keeps them in the array.
-function clearMarkers() {
-	setMapOnAll(null);
-}
-
 // Shows any markers currently in the array.
 function showMarkers() {
 	setMapOnAll(map);
 }
 
+// Removes the markers from the map, but keeps them in the array.
+function clearMarkers() {
+	setMapOnAll(null);
+}
 
 // Deletes all markers in the array by removing references to them.
 function deleteMarkers() {
@@ -261,12 +288,16 @@ function setMapOnAllCircles(map){
 	}
 }
 
-function clearCircles(){
-	setMapOnAllCircles(null);
+function showCirclesWithTimeout(){
+	setMapOnAllCircles(map);
 }
 
 function showCircles(){
 	setMapOnAllCircles(map);
+}
+
+function clearCircles(){
+	setMapOnAllCircles(null);
 }
 
 function deleteCircles(){
@@ -287,9 +318,47 @@ $(document).ready(function(){
 	
 	
 	$("#showAllMarkers").click(function(){
-		showMarkers();
-		showCircles();
+		
+		clearMarkers();
+		if($("#optShowGradually").is(":checked")){
+			alert(map);
+			var timeout;
+			var index;
+			for(var i = 0; i < eqkMapList.length; i++){
+				index = eqkMapList.length - i - 1;
+				timeout = i * 500;
+				window.setTimeout(function(index){
+					setMapOnMarker(index);
+					setMapOnCircle(index);
+				}.bind(this, index), timeout);
+			}
+			
+		}else{
+			showMarkers();
+			showCircles();
+		}
+		
 	});
+	
+/*
+function drop() {
+  clearMarkers();
+  for (var i = 0; i < neighborhoods.length; i++) {
+    addMarkerWithTimeout(neighborhoods[i], i * 200);
+  }
+}
+
+function addMarkerWithTimeout(position, timeout) {
+  window.setTimeout(function() {
+    markers.push(new google.maps.Marker({
+      position: position,
+      map: map,
+      animation: google.maps.Animation.DROP
+    }));
+  }, timeout);
+}
+*/
+	
 	
 	$("#hideAllMarkers").click(function(){
 		clearMarkers();
@@ -325,8 +394,8 @@ $(document).ready(function(){
 			<div id="eqkList">
 				<fieldset>
 					<legend>최근 지진 목록</legend>
-					<select id="eqkListbox" size="30">
-						<option disabled>[No][mgtd] [ co-ordinate ] [yyyy.mm.dd. hh:mm:ss]</option>
+					<select id="eqkListbox" size="42">
+						<option disabled>[Num][mgtd] [ co-ordinate ] [yyyy.mm.dd. hh:mm:ss]</option>
 					</select>
 				</fieldset>
 			</div>
@@ -334,8 +403,9 @@ $(document).ready(function(){
 			<div id="menu">
 				<!-- input type="button" id="prevBtn" value="이전" >
 				<input type="button" id="nextBtn" value="다음" -->
+				<input type="button" id="hideAllMarkers" value="감추기">
 				<input type="button" id="showAllMarkers" value="모두보기">
-				<input type="button" id="hideAllMarkers" value="감추기"><br>
+				<input type="checkbox" id="optShowGradually" >순차보기<br>	
 			</div>
 		</div>
 	</div>
@@ -343,19 +413,29 @@ $(document).ready(function(){
 	<div id="youtube_wrap">
 		
 		<div class="youtube_content">
-			<fieldset>
+			<fieldset class="youtube_fieldset">
 				<legend>한국 지진 실시간 중계</legend>
-				<iframe width="100%" height="360px" class="wiki-youtube" src="//www.youtube.com/embed/LqpjAhmhXcQ" frameborder="0" allowfullscreen=""></iframe>
+				<iframe width="100%" height="95%" class="wiki-youtube" src="//www.youtube.com/embed/LqpjAhmhXcQ" frameborder="0" allowfullscreen=""></iframe>
 			</fieldset>
 		</div>
 		
 		<div class="youtube_content">
-			<fieldset>
+			<fieldset class="youtube_fieldset">
 				<legend>일본 지진 실시간 중계</legend>
-				<iframe width="100%" height="360px" class="wiki-youtube" src="//www.youtube.com/embed/qmu8zrllUUI" frameborder="0" allowfullscreen=""></iframe>
+				<iframe width="100%" height="95%" class="wiki-youtube" src="//www.youtube.com/embed/qmu8zrllUUI" frameborder="0" allowfullscreen=""></iframe>
 			</fieldset>
-		<div>
+		</div>
 	</div>
-		
+	
+	
+	<div id="footer_div">
+		<footer>
+			<p>Posted by: SeokMin Yun</p>
+			<p>
+				Contact information: 
+				<a href="mailto:elraine@naver.com">elraine@naver.com</a>
+			</p>
+		</footer>
+	</div>
 	</body>
 </html>
