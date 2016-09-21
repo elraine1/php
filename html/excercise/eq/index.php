@@ -89,6 +89,7 @@ var circles = [];
 var labels = '1234567890';
 //var labels = '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@#$%^&*';
 var labelIndex = 0;
+var timers = [];
 //var eqkMapList = [];
 
 // api로부터 데이터를 가져온 뒤, 성공시 마커를 만든다.
@@ -208,6 +209,7 @@ function initEqkMapList(data){
 
 // 지진 기록(좌표)에 대한 마커 목록 생성
 function makeMarkers(){
+	alert(eqkMapList.length);
 	for(var i=0; i < eqkMapList.length; i++){
 		addMarker(i);
 	}
@@ -321,6 +323,13 @@ function setMapOnCircle(index){
 	circles[index].setMap(map);
 }
 
+
+function clearTimeoutAll(){
+	for (var i=0; i<timers.length; i++) {
+		clearTimeout(timers[i]);
+	}
+}
+
 </script>
 
 <script type="text/javascript">
@@ -331,16 +340,22 @@ $(document).ready(function(){
 	$("#showAllMarkers").click(function(){
 		
 		clearMarkers();
+		clearCircles();
+		
 		if($("#optShowGradually").is(":checked")){
+			
+			$("#stopTimerBtn").attr("disabled", false);
+			
 			var timeout;
 			var index;
 			for(var i = 0; i < eqkMapList.length; i++){
-				index = eqkMapList.length - i - 1;
+				//index = eqkMapList.length - i - 1;
+				index = i;
 				timeout = i * 500;
-				window.setTimeout(function(index){
+				timers.push(window.setTimeout(function(index){
 					setMapOnMarker(index);
 					setMapOnCircle(index);
-				}.bind(this, index), timeout);
+				}.bind(this, index), timeout));
 			}
 			
 		}else{
@@ -351,6 +366,7 @@ $(document).ready(function(){
 	});
 	
 	$("#hideAllMarkers").click(function(){
+		clearTimeoutAll();
 		clearMarkers();
 		clearCircles();
 	});
@@ -362,36 +378,27 @@ $(document).ready(function(){
 	});
 	
 	$("#selectYear").change(function(){
+		clearTimeoutAll();
+		deleteMarkers();
+		deleteCircles();
+			
+		$("#stopTimerBtn").attr("disabled", true);
+		
 		var fileName = $(this).val() + ".txt";
+		
 		dataLoad(fileName);
 		initListboxItem();	
 		makeMarkers();
 		makeCircles();
 	});
 	
-	
-	
-function dataLoad(fileName){
-	
-	var url = 'dataLoad.php';
-	deleteMarkers();
-	deleteCircles();
-	
-	$.ajax({
-		async: false,
-		type: "POST",
-		url: url,
-		data: {fileName: fileName},
-		dataType: "text",
-		success: function(data){
-			initEqkMapList(data);
-		},
-		error: function(xhr){
-			alert(xhr.requestText);
-		},
-		timeout: 3000
+	$("#stopTimerBtn").click(function(){
+		clearTimeoutAll();
+		clearMarkers();
+		clearCircles();
+		
+		$("#stopTimerBtn").attr("disabled", true);
 	});
-}
 	
 });
 		
@@ -433,7 +440,8 @@ function dataLoad(fileName){
 				
 				<input type="button" id="hideAllMarkers" value="감추기">
 				<input type="button" id="showAllMarkers" value="모두보기">
-				<input type="checkbox" id="optShowGradually" >순차보기<br>
+				<input type="checkbox" id="optShowGradually" >순차보기
+				<input type="button" id="stopTimerBtn" value="순차보기 중지" disabled><br>
 				
 			</div>
 		</div>
