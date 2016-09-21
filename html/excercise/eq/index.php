@@ -35,7 +35,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 #eqkList{
 	width: 90%;
-	height: 770px;
+	height: 760px;
 	margin: 0 auto;
 	margin-bottom: 5px;
 	border: 1px dashed red;
@@ -128,13 +128,21 @@ function initListboxItem(){
 	var latlng;
 	var mt;
 	var tmEqk;
+	
+	$("#eqkListbox").empty();
+	
+//	listbox.empty();
+	$("#eqkListbox").append("<option disabled>[Num][mgtd] [ co-ordinate ] [yyyy.mm.dd. hh:mm:ss]</option>");
+	
+	
 	for(var i=0; i < eqkMapList.length; i++){
 //		index = "[" + labels.substr(i % labels.length, 1) + "]";
 		index = "[" + leftPad(eqkMapList[i]['num']) + "]";
 		latlng = "[" + eqkMapList[i]['lat'].toFixed(2) + ", " + eqkMapList[i]['lon'].toFixed(2) + "]";
 		mt = "[M" + eqkMapList[i]['mt'].toFixed(1) + "]";
 		tmEqk = "[" + convertTimeFormat(eqkMapList[i]['tmEqk']) + "]";
-		$("#eqkListbox option:eq(" + i + ")").after("<option value='" + i + "'>" + index + " " +  mt + " " + latlng + " " + tmEqk + "</option>");	
+		$("#eqkListbox").append("<option value='" + i + "'>" + index + " " +  mt + " " + latlng + " " + tmEqk + "</option>");
+//		$("#eqkListbox option:eq(" + i + ")").after("<option value='" + i + "'>" + index + " " +  mt + " " + latlng + " " + tmEqk + "</option>");	
 	}	
 }
 
@@ -214,7 +222,9 @@ function addMarker(index){
 	var tmEqk = convertTimeFormat(eqkMapList[index]['tmEqk']);
 	var mt = eqkMapList[index]['mt'].toString();
 	
-	var myTitle = "- 지진 발생 일시 -\n" + tmEqk + "\n[M" + mt + "]"; 
+	var myTitle = "- 지진 발생 일시 -\n"; 
+		myTitle += tmEqk + "\n";
+		myTitle += "[No." + eqkMapList[index]['num'] + "]" + "[M" + mt + "]";
 	var myLabel = (eqkMapList[index]['num'] % 10).toString();
 //	var myLabel = labels.substr((index % (labels.length)),1);
 	
@@ -275,6 +285,7 @@ function deleteMarkers() {
 }
 
 function setMapOnMarker(index){
+	
 	clearMarkers();
 	markers[index].setMap(map);
 }
@@ -321,7 +332,6 @@ $(document).ready(function(){
 		
 		clearMarkers();
 		if($("#optShowGradually").is(":checked")){
-			alert(map);
 			var timeout;
 			var index;
 			for(var i = 0; i < eqkMapList.length; i++){
@@ -340,38 +350,49 @@ $(document).ready(function(){
 		
 	});
 	
-/*
-function drop() {
-  clearMarkers();
-  for (var i = 0; i < neighborhoods.length; i++) {
-    addMarkerWithTimeout(neighborhoods[i], i * 200);
-  }
-}
-
-function addMarkerWithTimeout(position, timeout) {
-  window.setTimeout(function() {
-    markers.push(new google.maps.Marker({
-      position: position,
-      map: map,
-      animation: google.maps.Animation.DROP
-    }));
-  }, timeout);
-}
-*/
-	
-	
 	$("#hideAllMarkers").click(function(){
 		clearMarkers();
 		clearCircles();
 	});
 	
 	$("#eqkListbox").change(function(){
-		//alert($(this).val());
-		
 		var index = parseInt($(this).val());		
 		setMapOnMarker(index);
 		setMapOnCircle(index);
 	});
+	
+	$("#selectYear").change(function(){
+		var fileName = $(this).val() + ".txt";
+		dataLoad(fileName);
+		initListboxItem();	
+		makeMarkers();
+		makeCircles();
+	});
+	
+	
+	
+function dataLoad(fileName){
+	
+	var url = 'dataLoad.php';
+	deleteMarkers();
+	deleteCircles();
+	
+	$.ajax({
+		async: false,
+		type: "POST",
+		url: url,
+		data: {fileName: fileName},
+		dataType: "text",
+		success: function(data){
+			initEqkMapList(data);
+		},
+		error: function(xhr){
+			alert(xhr.requestText);
+		},
+		timeout: 3000
+	});
+}
+	
 });
 		
 </script>
@@ -380,6 +401,7 @@ function addMarkerWithTimeout(position, timeout) {
 	
 	<body>
 	<h2>&nbsp; 대한민국 지진 지도</h2>
+	<h5>&nbsp; &nbsp; ※ 2016년 9월 12일 경주에서 발생한 규모 5.1 지진 이후의 목록은 상세분석 결과이며, 규모 2.0 미만의 지진은 지진목록에서 제외 됨</h5>
 	
 	<div id="content_wrap">
 		
@@ -393,7 +415,7 @@ function addMarkerWithTimeout(position, timeout) {
 		
 			<div id="eqkList">
 				<fieldset>
-					<legend>최근 지진 목록</legend>
+					<legend>지진 목록</legend>
 					<select id="eqkListbox" size="42">
 						<option disabled>[Num][mgtd] [ co-ordinate ] [yyyy.mm.dd. hh:mm:ss]</option>
 					</select>
@@ -401,11 +423,18 @@ function addMarkerWithTimeout(position, timeout) {
 			</div>
 			
 			<div id="menu">
-				<!-- input type="button" id="prevBtn" value="이전" >
-				<input type="button" id="nextBtn" value="다음" -->
+				자료 선택
+				<select id="selectYear">
+					<option value="2016" selected>2016</option>
+					<option value="2015" >2015</option>
+					<option value="2014" >2014</option>
+					<option value="2013" >2013</option>
+				</select><br>
+				
 				<input type="button" id="hideAllMarkers" value="감추기">
 				<input type="button" id="showAllMarkers" value="모두보기">
-				<input type="checkbox" id="optShowGradually" >순차보기<br>	
+				<input type="checkbox" id="optShowGradually" >순차보기<br>
+				
 			</div>
 		</div>
 	</div>
